@@ -10,15 +10,15 @@ class Agent:
 
     def setup(self):
         isUpdate = self.runCommand("apt update")
-        if not isUpdate.get('sucess',""):
+        if not isUpdate.get('success',""):
             print(f"ther was an issue with the update {isUpdate.get('error')}")
         for aptPackages in self.packages:
             status = self.runCommand(f"apt install {aptPackages} -y")
-            if not status.get("sucess",""):
-                print(f"The package {aptPackages} was npt sucessfully installed because {status.get('erroe', 'Ther is no message in the error')}")
+            if not status.get("success",""):
+                print(f"The package {aptPackages} was npt successfully installed because {status.get('erroe', 'Ther is no message in the error')}")
         for command in self.envCommands:
             status = self.runCommand(command)
-            if not status.get("sucess",""):
+            if not status.get("success",""):
                 print("The commad had some issue running" + command)
 
     def execute(self):
@@ -28,7 +28,7 @@ class Agent:
         for command in self.commands:
             status = self.runCommand(command)
             print("in progress")
-            if status.get('sucess'):
+            if status.get('success'):
                 output += f"\nthe output for the command \n --- \n {command}"
             else:
                 error.append({"command":command,"error":f"the message is {status.get('error','none')}"})
