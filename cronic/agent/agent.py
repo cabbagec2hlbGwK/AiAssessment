@@ -29,7 +29,7 @@ class Agent:
             status = self.runCommand(command)
             print("in progress")
             if status.get('success'):
-                output += f"\nthe output for the command \n --- \n {command}"
+                output += f"\nthe output for the command \n --- \n {status.get('output','Null')}"
             else:
                 error.append({"command":command,"error":f"the message is {status.get('error','none')}"})
         return {"output":output, "failedCommands":error}
