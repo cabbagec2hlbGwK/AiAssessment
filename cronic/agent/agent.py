@@ -8,6 +8,8 @@ class Agent:
         self.envCommands = envCommands
         self.commands = commands
 
+    def callBack(self):
+        pass
     def setup(self):
         isUpdate = self.runCommand("apt update")
         if not isUpdate.get('success',""):
@@ -66,7 +68,6 @@ class Agent:
                 "message": "An error occurred while executing the command"
             }
 
-command = "sleep 10 && ls sdf" 
 
 agent = Agent(taskId="",endpoint="",packages=["nmap", "python3", "curl"], envCommands=[], commands=["nmap -p- localhost", "curl google.com"])
 state = agent.execute()
