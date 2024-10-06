@@ -148,7 +148,7 @@ class AgentManager:
             with self.connection.cursor() as cursor:
                 insert_task_query = """
                 INSERT INTO task_list (taskId, userId, AgentId, command, updateTimeStamp)
-                VALUES (%s, %s, %s, %s, %s, %s, %s);
+                VALUES (%s, %s, %s, %s, %s);
                 """
                 cursor.execute(insert_task_query, (taskId, userId, agentId, command, str(datetime.now())))
                 self.connection.commit()
