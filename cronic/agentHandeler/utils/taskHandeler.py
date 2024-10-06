@@ -174,7 +174,7 @@ class AgentManager:
             cursor.execute(query, (taskId,))
             result = cursor.fetchone()
             if result:
-                return result['errorCounter']
+                return result
             return 0
     def agentHeartBeat(self,agentId):
         try:
