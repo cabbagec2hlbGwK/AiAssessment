@@ -1,4 +1,5 @@
 import flask
+import json
 import requests
 import os
 import datetime
@@ -27,7 +28,7 @@ def main():
     for i in range(10):
         userId = random.choice(valid_user_ids)
         agentId = random.choice(valid_agent_ids)
-        command = {"command":"nmap -p- localhost"}
+        command = json.dumps({"command":"nmap -p- localhost"})
         id = agentManager.createTask(userId, agentId, command)
         print(f"task is created with {id}")
 
