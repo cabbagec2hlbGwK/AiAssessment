@@ -87,9 +87,10 @@ class DatabaseManager:
             name VARCHAR(255),
             endpoint VARCHAR(255),
             Detailed BOOLEAN DEFAULT 0,
-            jobState ENUM('success','error', 'expired', 'active') NOT NULL,
-            timeStamp TIMESTAMP,
+            jobState ENUM('success', 'error', 'expired', 'active') NOT NULL,
+            timeStamp TIMESTAMP
         );
+        
         CREATE TABLE IF NOT EXISTS task_list (
             taskId VARCHAR(255) PRIMARY KEY,
             userId VARCHAR(255),
@@ -98,11 +99,11 @@ class DatabaseManager:
             output VARCHAR(255),
             error VARCHAR(255),
             errorCounter INT DEFAULT 0,
-            taskStatus ENUM('success','error', 'expired', 'active') NOT NULL DEFAULT 'active',
+            taskStatus ENUM('success', 'error', 'expired', 'active') NOT NULL DEFAULT 'active',
             hasMessageBeenSent BOOLEAN DEFAULT 0,
             timeStamp TIMESTAMP,
+            FOREIGN KEY (userId) REFERENCES user_reg(userId) ON DELETE CASCADE
         );
-
         """
         with self.connection.cursor() as cursor:
             cursor.execute(create_table_query)
