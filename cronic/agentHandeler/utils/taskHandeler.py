@@ -1,3 +1,4 @@
+from datetime import datetime
 import pymysql
 import os
 import json
@@ -97,12 +98,12 @@ class DatabaseManager:
             userId VARCHAR(255),
             AgentId VARCHAR(255),
             command VARCHAR(255),
-            output VARCHAR(255),
-            error VARCHAR(255),
+            output BLOB DEFAULT "",
+            error BLOB DEFAULT "",
             errorCounter INT DEFAULT 0,
             taskStatus ENUM('success', 'error', 'expired', 'active') NOT NULL DEFAULT 'active',
             hasMessageBeenSent BOOLEAN DEFAULT 0,
-            timeStamp TIMESTAMP,
+            updateTimeStamp TIMESTAMP,
             FOREIGN KEY (userId) REFERENCES user_reg(userId) ON DELETE CASCADE
         );
         """
@@ -123,6 +124,60 @@ class DatabaseManager:
             self.connection.rollback()
             raise e
 
+    def getAgentTask(self,agentId):
+        query = "SELECT * FROM task_list WHERE AgentId = %s;"
+        results = self.execute_query(query, (agentId,))
+        return results
+
+    def getTask(self,taskId):
+        query = "SELECT * FROM task_list WHERE taskId = %s;"
+        results = self.execute_query(query, (taskId,))
+        return results
+    def getUser(self, userId, userName=""):
+        pass
+    def getErrorCounter(self, taskId):
+        with self.connection.cursor() as cursor:
+            query = "SELECT errorCounter FROM task_list WHERE taskId = %s;"
+            cursor.execute(query, (taskId,))
+            result = cursor.fetchone()
+            if result:
+                return result['errorCounter']
+            return 0
+    def agentHeartBeat(self,agentId):
+        try:
+            with self.connection.cursor() as cursor:
+                query = "UPDATE task_list SET updateTimeStamp = %s WHERE AgentId = %s;"
+                cursor.execute(query, (datetime.now(), agentId))
+                self.connection.commit() 
+                return True
+        except Exception as e:
+            print(e)
+            return False
+    def setTaskSuccess(self, taskId, output):
+        try:
+            with self.connection.cursor() as cursor:
+                query = "UPDATE task_list SET output = %s WHERE taskId = %s"
+                cursor.execute(query, (str(output), taskId))
+                self.connection.commit() 
+                return True
+        except Exception as e:
+            print(e)
+            return False
+    def setTaskError(self, taskId, error, errorCounter=None):
+        if not errorCounter:
+            errorCounter = int(self.getErrorCounter(taskId))+1
+        try:
+            with self.connection.cursor() as cursor:
+                query = "UPDATE task_list SET error = %s WHERE taskId = %s"
+                cursor.execute(query, (str(output), taskId))
+                self.connection.commit() 
+                return True
+        except Exception as e:
+            print(e)
+            return False
+
+
+
     def close(self):
         try:
             self.connection.close()
@@ -130,7 +185,6 @@ class DatabaseManager:
         except Exception as e:
             print(f"Failed to close connection: {e}")
 
-# Example Usage
 def main():
     secret_name = os.getenv("secret_name")
     rds_endpoint = os.getenv("rds_endpoint")
