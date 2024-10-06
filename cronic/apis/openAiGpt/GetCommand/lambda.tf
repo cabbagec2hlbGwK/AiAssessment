@@ -64,3 +64,4 @@ resource "aws_lambda_function" "gc_lambda" {
   }
 
 }
+

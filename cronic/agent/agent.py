@@ -1,8 +1,11 @@
 import subprocess
+import datetime
+import requests
+import os
+import json
 
 class Agent:
-    def __init__(self, endpoint, taskId, packages, commands, envCommands) -> None:
-        self.masterEndpoint = endpoint
+    def __init__(self, taskId, packages, commands, envCommands) -> None:
         self.taskId= taskId
         self.packages = packages
         self.envCommands = envCommands
@@ -69,10 +72,37 @@ class Agent:
             }
 
 
-agent = Agent(taskId="",endpoint="",packages=["nmap", "python3", "curl"], envCommands=[], commands=["nmap -p- localhost", "curl google.com"])
-state = agent.execute()
-print(state)
+class agentProbe:
+    def __init__(self, endpoint) -> None:
+        self.agentId = os.getenv("AGENTID")
+        self.endpoint = endpoint
+        self.startTime = datetime.datetime.now()
+    def heartBeats(self):
+        requests.post(url=self.endpoint+"/heartBeats", json= json.dumps({"agentId":self.agentId,"upTime":str((datetime.datetime.now()-self.startTime).total_seconds()/60)}))
 
+
+def main():
+    tasks = json.loads(os.getenv("TASKLIST",""))
+    packages = os.getenv("PACKAGES","[]")
+    if not tasks:
+        print("no commands passed")
+        return False
+    agentSetup = Agent(taskId="", packages=json.loads(packages), envCommands=[], commands=[])
+    print(agentSetup.execute())
+
+    #agent = Agent(taskId="",packages=["nmap", "python3", "curl"], envCommands=[], commands=["nmap -p- localhost", "curl google.com"])
+    #state = agent.execute()
+    results = dict()
+    for key, values in tasks.items():
+        agent = Agent(taskId="",packages=[], envCommands=[], commands=values.get("command"))
+        result = agent.execute()
+        results[key]={"results":result}
+
+
+        
+
+if __name__=="__main__":
+    main()
 
 
 

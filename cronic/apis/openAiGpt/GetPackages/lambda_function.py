@@ -54,17 +54,13 @@ def getCommand(endpoint):
     return response
 
 def lambda_handeler(event, context):
-    websites = ['google.com','gmail.com']
-    jsonList = dict()
-    for web in websites:
-        data = getCommand(web)
-        rawJason = data.choices[0].message.content
-        jsonData = extractJsonText(rawJason)
-        print("------------------------------------------"+web)
-        jsonList[web]=jsonData
-        for js in jsonData:
-            print(js.get('commands',"+++++++++++++++++++++++++++++++++++++++++"))
+    data = event.get("body", "")
+    data = getCommand(data)
+    print(data)
+    rawJason = data.choices[0].message.content
+    jsonData = extractJsonText(rawJason)
+    print("------------------------------------------")
     return {
         'statusCode': 200,
-        'body': json.dumps(jsonList)
-    }
+        'body': json.dumps(jsonData)
+        }
