@@ -131,7 +131,7 @@ class AgentManager:
         try:
             with self.connection.cursor() as cursor:
                 insert_user_query = """
-                INSERT INTO user_reg (userId, name, eamil, endpoint, Detailed)
+                INSERT INTO user_reg (userId, name, email, endpoint, Detailed)
                 VALUES (%s, %s, %s, %s, %s);
                 """
                 cursor.execute(insert_user_query, (userId, name, email, endpoint, detailedReport))
