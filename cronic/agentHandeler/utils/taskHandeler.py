@@ -75,7 +75,7 @@ class DatabaseManager:
                 cursor.execute("DESCRIBE task_list;")
         except pymysql.MySQLError as e:
             if e.args[0] == 1146:  # Error code for table not found
-                print(f"Table '{self.table_name}' does not exist. Creating table.")
+                print("Table does not exist. Creating table.")
                 self.create_table()
             else:
                 raise e
@@ -131,7 +131,7 @@ class DatabaseManager:
 def main():
     secret_name = os.getenv("secret_name")
     rds_endpoint = os.getenv("rds_endpoint")
-    region_name = os.getenv("region")
+    region_name = os.getenv("AWS_DEFAULT_REGION")
     db_manager = DatabaseManager(secret_name, rds_endpoint, region_name, db_name="aiAssesDB")
 
     try:
