@@ -81,7 +81,7 @@ class DatabaseManager:
                 raise e
 
     def create_table(self):
-        create_table_query = f"""
+        create_table_query_user= f"""
         CREATE TABLE IF NOT EXISTS user_reg (
             userId VARCHAR(255) PRIMARY KEY,
             name VARCHAR(255),
@@ -90,7 +90,8 @@ class DatabaseManager:
             jobState ENUM('success', 'error', 'expired', 'active') NOT NULL,
             timeStamp TIMESTAMP
         );
-        
+        """
+        create_table_query_task = f"""
         CREATE TABLE IF NOT EXISTS task_list (
             taskId VARCHAR(255) PRIMARY KEY,
             userId VARCHAR(255),
@@ -106,7 +107,8 @@ class DatabaseManager:
         );
         """
         with self.connection.cursor() as cursor:
-            cursor.execute(create_table_query)
+            cursor.execute(create_table_query_user)
+            cursor.execute(create_table_query_task)
             self.connection.commit()
 
     def execute_query(self, query, data=None):
@@ -133,7 +135,7 @@ def main():
     secret_name = os.getenv("secret_name")
     rds_endpoint = os.getenv("rds_endpoint")
     region_name = os.getenv("AWS_DEFAULT_REGION")
-    db_manager = DatabaseManager(secret_name, rds_endpoint, region_name, db_name="aiAssesDB")
+    db_manager = DatabaseManager(secret_name, rds_endpoint, region_name, db_name="aiAssesDB1")
 
     try:
         db_manager.execute_query("DESCRIBE user_reg;")
