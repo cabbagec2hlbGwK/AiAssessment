@@ -6,6 +6,7 @@ import datetime
 import uuid
 import random
 from utils.taskHandeler import AgentManager
+from utils.endpointHandeler import EndpointHandeler
 TIMEOUT = 0.5
 
 
@@ -13,7 +14,9 @@ def main():
     secret_name = os.getenv("secret_name")
     rds_endpoint = os.getenv("rds_endpoint")
     region_name = os.getenv("AWS_DEFAULT_REGION")
+    hostEndpoint = os.getenv("APIHOST")
     agentManager = AgentManager(secret_name, rds_endpoint, region_name, db_name="aiAssesDB2")
+    endpoint = EndpointHandeler(host=hostEndpoint)
 
     valid_user_ids = [
     "c9d9dd6d-f32f-4518-b90f-624ae281b95e",
@@ -25,12 +28,11 @@ def main():
         "5da75265-bcbe-42b4-8629-46c88dcc6e6d",
         "bfaa3a74-b6e5-4c8d-8276-742728a00923"
     ]
-    for i in range(10):
-        userId = random.choice(valid_user_ids)
-        agentId = random.choice(valid_agent_ids)
-        command = json.dumps({"command":"nmap -p- localhost"})
-        id = agentManager.createTask(userId, agentId, command)
-        print(f"task is created with {id}")
+    commands = endpoint.getCommand("https://stackoverflow.com/questions/48561981/activate-python-virtualenv-in-dockerfile")
+    packages = endpoint.getPackages(commands)
+
+    for command in commands:
+        print(command)
 
 
     

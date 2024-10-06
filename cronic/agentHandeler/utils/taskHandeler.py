@@ -90,7 +90,7 @@ class AgentManager:
             email VARCHAR(255),
             endpoint VARCHAR(255),
             Detailed BOOLEAN DEFAULT 0,
-            jobState ENUM('success', 'error', 'expired', 'active') NOT NULL DEFAULT 'active',
+            jobState ENUM('success', 'error', 'expired', 'active', 'waiting') NOT NULL DEFAULT 'waiting',
             timeStamp TIMESTAMP
         );
         """
@@ -174,7 +174,7 @@ class AgentManager:
             cursor.execute(query, (taskId,))
             result = cursor.fetchone()
             if result:
-                return result
+                return result[0]
             return 0
     def agentHeartBeat(self,agentId):
         try:

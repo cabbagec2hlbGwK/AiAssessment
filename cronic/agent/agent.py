@@ -3,6 +3,7 @@ import datetime
 import requests
 import os
 import json
+import base64
 
 class Agent:
     def __init__(self, taskId, packages, commands, envCommands) -> None:
@@ -14,6 +15,8 @@ class Agent:
     def callBack(self):
         pass
     def setup(self):
+        if not self.packages:
+            return
         isUpdate = self.runCommand("apt update")
         if not isUpdate.get('success',""):
             print(f"ther was an issue with the update {isUpdate.get('error')}")
@@ -73,8 +76,8 @@ class Agent:
 
 
 class agentProbe:
-    def __init__(self, endpoint) -> None:
-        self.agentId = os.getenv("AGENTID")
+    def __init__(self, endpoint, agentId) -> None:
+        self.agentId = agentId
         self.endpoint = endpoint
         self.startTime = datetime.datetime.now()
     def heartBeats(self):
@@ -82,21 +85,24 @@ class agentProbe:
 
 
 def main():
-    tasks = json.loads(os.getenv("TASKLIST",""))
+    rawTask = json.loads(os.getenv("TASKLIST",""))
     packages = os.getenv("PACKAGES","[]")
-    if not tasks:
+    agentId = os.getenv("AGENTID")
+    if not rawTask:
         print("no commands passed")
         return False
-    agentSetup = Agent(taskId="", packages=json.loads(packages), envCommands=[], commands=[])
-    print(agentSetup.execute())
+    try:
+        tasks = json.loads(base64.b64decode(rawTask))
+        agentSetup = Agent(taskId="", packages=json.loads(packages), envCommands=[], commands=[])
+        print(agentSetup.execute())
 
-    #agent = Agent(taskId="",packages=["nmap", "python3", "curl"], envCommands=[], commands=["nmap -p- localhost", "curl google.com"])
-    #state = agent.execute()
-    results = dict()
-    for key, values in tasks.items():
-        agent = Agent(taskId="",packages=[], envCommands=[], commands=values.get("command"))
-        result = agent.execute()
-        results[key]={"results":result}
+        results = dict()
+        for key, values in tasks.items():
+            agent = Agent(taskId="",packages=[], envCommands=[], commands=values.get("command"))
+            result = agent.execute()
+            results[key]={"results":result}
+    except Exception as e:
+        print(e)
 
 
         
