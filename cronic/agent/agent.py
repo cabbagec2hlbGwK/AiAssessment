@@ -88,6 +88,7 @@ def main():
     rawTask = json.loads(os.getenv("TASKLIST",""))
     packages = os.getenv("PACKAGES","[]")
     agentId = os.getenv("AGENTID")
+    masterEndoint = os.getenv("MASTERENDPOINT")
     if not rawTask:
         print("no commands passed")
         return False

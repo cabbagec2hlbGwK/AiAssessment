@@ -5,9 +5,28 @@ import os
 import datetime
 import uuid
 import random
+import base64
+from utils import endpointHandeler
 from utils.taskHandeler import AgentManager
 from utils.endpointHandeler import EndpointHandeler
+from utils.kubeHandeler import KubeHandeler
 TIMEOUT = 0.5
+
+def deployTask(endpoint:EndpointHandeler, agentManager:AgentManager, k8:KubeHandeler, targer, userId):
+    agentId = str(uuid.uuid4())
+    commands = endpoint.getCommand(targer)
+    packages = endpoint.getPackages(commands)
+    if not packages:
+        packages=[{}]
+    packages = packages[0].get('packages','[]')
+    tasks = dict()
+    for command in commands.get("commands",[]):
+        taskId = agentManager.createTask(userId=userId, agentId=agentId,command=str(command))
+        tasks[taskId]={"command":[command]}
+    print(tasks)
+    k8.createPod(agentId=agentId, tasks=base64.b64encode(json.dumps(tasks)), packages=json.dumps(packages), masterEndpoint="test")
+
+
 
 
 def main():
@@ -17,6 +36,7 @@ def main():
     hostEndpoint = os.getenv("APIHOST")
     agentManager = AgentManager(secret_name, rds_endpoint, region_name, db_name="aiAssesDB2")
     endpoint = EndpointHandeler(host=hostEndpoint)
+    k8 = KubeHandeler(agentImage="ubuntu")
 
     valid_user_ids = [
     "c9d9dd6d-f32f-4518-b90f-624ae281b95e",
@@ -28,11 +48,8 @@ def main():
         "5da75265-bcbe-42b4-8629-46c88dcc6e6d",
         "bfaa3a74-b6e5-4c8d-8276-742728a00923"
     ]
-    commands = endpoint.getCommand("https://stackoverflow.com/questions/48561981/activate-python-virtualenv-in-dockerfile")
-    packages = endpoint.getPackages(commands)
 
-    for command in commands:
-        print(command)
+    deployTask(agentManager=agentManager, endpoint=endpointHandeler, k8=k8, userId=valid_user_ids[1], targer="http://mrgtec.com")
 
 
     
