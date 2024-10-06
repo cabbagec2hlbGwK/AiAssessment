@@ -4,55 +4,24 @@ import os
 import datetime
 import uuid
 import random
-
+from utils.taskHandeler import AgentManager
 TIMEOUT = 0.5
 
-class Task:
-    def __init__(self, taskId, command) -> None:
-        self.taskId = taskId
-        self.command = command
-        self.healthCheck = datetime.datetime.now()
-        self.state = "active"
-
-    def updateHealth(self):
-        self.healthCheck = datetime.datetime.now()
-    def getUpdateInterval(self):
-        return (datetime.datetime.now() - self.healthCheck).total_seconds() /60 
-    def stateChecker(self):
-        if self.getUpdateInterval() >= TIMEOUT:
-            self.updateState("error")
-            return False
-        else:
-            return True
-    def updateState(self, state):
-        if state in  "success" or state in "failed" or state in "active" or "error" in state:
-            self.state = state
-            return True
-        else:
-            print("wrong state was passed")
-            return False
-
-
-
-        
-def runManagerEndpoint(manager):
-    app = flask.app("MasterNode")
-    @app.route("agentHealth", methods=['POST'])
-    def updateAgent():
-        pass
-def runSheduler(master):
-    pass
 
 def main():
-    master = WorkerManager()
-    for a in range(30):
-        master.registerTask(Task(taskId=str(uuid.uuid4),command=f"nmap -test {a}"))
-    while True:
-        os.system('cls')
-        print(f"active connection : {len(master.tasks)}")
-        task = master.tasks[random.randint(0,len(master.tasks)-2)]
-        task.updateHealth()
-        master.taskStateUpdator()
+    secret_name = os.getenv("secret_name")
+    rds_endpoint = os.getenv("rds_endpoint")
+    region_name = os.getenv("AWS_DEFAULT_REGION")
+    agentManager = AgentManager(secret_name, rds_endpoint, region_name, db_name="aiAssesDB1")
+    id = agentManager.crateUser(name="asher", email="asher@asher.com",endpoint="https://google.com",detailedReport=False)
+    print(id)
+    id = agentManager.crateUser(name="james", email="asher@asher.com",endpoint="https://google.com",detailedReport=False)
+    print(id)
+    id = agentManager.crateUser(name="bananna", email="asher@asher.com",endpoint="https://google.com",detailedReport=False)
+    print(id)
+
+    
+
 
 if __name__ =="__main__":
     main()

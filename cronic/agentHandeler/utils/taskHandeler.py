@@ -1,4 +1,5 @@
 from datetime import datetime
+import uuid
 import pymysql
 import os
 import json
@@ -6,7 +7,7 @@ import boto3
 from pymysql.err import OperationalError
 from botocore.exceptions import ClientError
 
-class DatabaseManager:
+class AgentManager:
     def __init__(self, secret_name, rds_endpoint, region_name, db_name="defaultDB"):
         self.rds_endpoint = rds_endpoint
         self.region_name = region_name
@@ -86,9 +87,10 @@ class DatabaseManager:
         CREATE TABLE IF NOT EXISTS user_reg (
             userId VARCHAR(255) PRIMARY KEY,
             name VARCHAR(255),
+            email VARCHAR(255),
             endpoint VARCHAR(255),
             Detailed BOOLEAN DEFAULT 0,
-            jobState ENUM('success', 'error', 'expired', 'active') NOT NULL,
+            jobState ENUM('success', 'error', 'expired', 'active') NOT NULL DEFAULT 'active',
             timeStamp TIMESTAMP
         );
         """
@@ -124,6 +126,37 @@ class DatabaseManager:
             self.connection.rollback()
             raise e
 
+    def crateUser(self, name, email, endpoint, detailedReport):
+        userId = str(uuid.uuid4())
+        try:
+            with self.connection.cursor() as cursor:
+                insert_user_query = """
+                INSERT INTO user_reg (userId, name, eamil, endpoint, Detailed)
+                VALUES (%s, %s, %s, %s, %s);
+                """
+                cursor.execute(insert_user_query, (userId, name, email, endpoint, detailedReport))
+                self.connection.commit()
+                print(f"sucessfully created the user {name} with the userId : {userId}")
+                return userId
+        except pymysql.MySQLError as e:
+            print(f"Error connecting to the database or inserting user information: {e}")
+            return False
+
+    def createTask(self, userId, agentId, command):
+        taskId = str(uuid.uuid4())
+        try:
+            with self.connection.cursor() as cursor:
+                insert_task_query = """
+                INSERT INTO task_list (taskId, userId, AgentId, command, updateTimeStamp)
+                VALUES (%s, %s, %s, %s, %s, %s, %s);
+                """
+                cursor.execute(insert_task_query, (taskId, userId, agentId, command, str(datetime.now())))
+                self.connection.commit()
+                print(f"New task with taskId '{taskId}' added successfully.")
+                return taskId
+        except pymysql.MySQLError as e:
+            print(f"Error connecting to the database or inserting task information: {e}")
+            return False
     def getAgentTask(self,agentId):
         query = "SELECT * FROM task_list WHERE AgentId = %s;"
         results = self.execute_query(query, (agentId,))
@@ -169,7 +202,7 @@ class DatabaseManager:
         try:
             with self.connection.cursor() as cursor:
                 query = "UPDATE task_list SET error = %s WHERE taskId = %s"
-                cursor.execute(query, (str(output), taskId))
+                cursor.execute(query, (str(error), taskId))
                 self.connection.commit() 
                 return True
         except Exception as e:
@@ -189,7 +222,7 @@ def main():
     secret_name = os.getenv("secret_name")
     rds_endpoint = os.getenv("rds_endpoint")
     region_name = os.getenv("AWS_DEFAULT_REGION")
-    db_manager = DatabaseManager(secret_name, rds_endpoint, region_name, db_name="aiAssesDB1")
+    db_manager = AgentManager(secret_name, rds_endpoint, region_name, db_name="aiAssesDB1")
 
     try:
         db_manager.execute_query("DESCRIBE user_reg;")
