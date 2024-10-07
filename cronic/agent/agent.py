@@ -93,7 +93,7 @@ def main():
         print("no commands passed")
         return False
     try:
-        tasks = json.loads(base64.b64decode(rawTask))
+        tasks = json.loads(base64.b64decode(rawTask).decode("utf-8"))
         agentSetup = Agent(taskId="", packages=json.loads(packages), envCommands=[], commands=[])
         print(agentSetup.execute())
 
