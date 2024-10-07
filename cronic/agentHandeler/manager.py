@@ -14,16 +14,17 @@ TIMEOUT = 0.5
 
 def deployTask(endpoint:EndpointHandeler, agentManager:AgentManager, k8:KubeHandeler, targer, userId):
     agentId = str(uuid.uuid4())
-    commands = endpoint.getCommand(targer)
-    packages = endpoint.getPackages(commands)
+    rawCommands = endpoint.getCommand(targer)
+    packages = endpoint.getPackages(rawCommands)
     if not packages:
         packages=[{}]
     packages = packages[0].get('packages','[]')
     tasks = dict()
-    for command in commands.get("commands",[]):
-        taskId = agentManager.createTask(userId=userId, agentId=agentId,command=str(command))
-        tasks[taskId]={"command":[command]}
-    print(tasks)
+    for commands in rawCommands:
+        for command in commands.get("commands",[]):
+            taskId = agentManager.createTask(userId=userId, agentId=agentId,command=str(command))
+            tasks[taskId]={"command":[command]}
+        print(tasks)
     k8.createPod(agentId=agentId, tasks=base64.b64encode(json.dumps(tasks)), packages=json.dumps(packages), masterEndpoint="test")
 
 
