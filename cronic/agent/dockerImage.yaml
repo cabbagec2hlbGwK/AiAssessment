@@ -1,0 +1,13 @@
+version: '3.8'
+
+services:
+  web:
+    image: nginx:latest
+    container_name: nginx_server
+    ports:
+      - "8080:80"
+    volumes:
+      - ./html:/usr/share/nginx/html
+    environment:
+      - ENVIRONMENT=development
+      - APP_VERSION=1.0
