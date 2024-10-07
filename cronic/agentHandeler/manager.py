@@ -25,7 +25,7 @@ def deployTask(endpoint:EndpointHandeler, agentManager:AgentManager, k8:KubeHand
             taskId = agentManager.createTask(userId=userId, agentId=agentId,command=str(command))
             tasks[taskId]={"command":[command]}
         print(tasks)
-    k8.createPod(agentId=agentId, tasks=base64.b64encode(json.dumps(tasks).encode("utf-8")), packages=json.dumps(packages), masterEndpoint="test")
+    k8.createPod(agentId=agentId, tasks=str(base64.b64encode(json.dumps(tasks).encode("utf-8"))), packages=json.dumps(packages), masterEndpoint="test")
 
 
 
