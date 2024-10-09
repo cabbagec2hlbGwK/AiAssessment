@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+</head>
+<body>
+    <h1>Vulnerability Assessment Report</h1>
+
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}  <!-- This will automatically render the email, website_url, and report_type fields -->
+        <button type="submit">Generate Report</button>
+    </form>
+
+    <script>
+    const form = document.querySelector('form');
+    form.addEventListener('submit', async function(event) {
+        event.preventDefault();
+        const formData = new FormData(form);
+
+        const response = await fetch(window.location.href, {
+            method: 'POST',
+            body: formData
+        });
+
+        const result = await response.json();
+        if (result.status === 'success') {
+            alert('Report generated: ' + JSON.stringify(result.report, null, 2));
+        } else {
+            alert('Failed to generate report');
+        }
+    });
+    </script>
+</body>
+</html>
