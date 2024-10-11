@@ -4,6 +4,20 @@ import requests
 import os
 import json
 import base64
+from celery import Celery
+
+class workerDivider:
+    def __init__(self, brokerHost, brokerPassword, brokerPort= 6379, dbNumber = 0) -> None:
+        self.brokerHost = brokerHost
+        self.brokerPassword= brokerPassword
+        self.brokerPort = brokerPort
+        self.dbNumber = dbNumber
+        self.brokerCon = self.creatBrokerConnection()
+
+    def creatBrokerConnection(self):
+        app = Celery('tasks', broker=f'redis://localhost:{self.brokerPort}/{self.dbNumber}')
+
+
 
 class Agent:
     def __init__(self, taskId, packages, commands, envCommands) -> None:
@@ -86,20 +100,8 @@ class agentProbe:
         requests.post(url=self.endpoint+"/heartBeats", json= json.dumps({"agentId":self.agentId,"upTime":str((datetime.datetime.now()-self.startTime).total_seconds()/60)}))
 
 
-def main():
-    rawTask = os.getenv("TASKLIST","")
-    packages = os.getenv("PACKAGES",'["curl"]')
-    agentId = os.getenv("AGENTID")
-    masterEndoint = os.getenv("MASTERENDPOINT")
-    if not rawTask or not packages:
-        print("no commands passed")
-        return False
-    print(json.loads(packages.strip()))
+def main(tasks, packages, agentId, masterEndpoint):
     try:
-        tasks = json.loads(base64.b64decode(rawTask).decode("utf-8"))
-        agentSetup = Agent(taskId="", packages=json.loads(packages), envCommands=[], commands=[])
-        print(agentSetup.execute())
-
         results = dict()
         for key, values in tasks.items():
             agent = Agent(taskId="",packages=[], envCommands=[], commands=values.get("command"))
@@ -107,6 +109,7 @@ def main():
             print(f"key is {key}")
             results[key]={"results":result}
         release(results=results, agentId=agentId, callback=masterEndoint)
+        retunr 0
     except Exception as e:
         print(e)
 

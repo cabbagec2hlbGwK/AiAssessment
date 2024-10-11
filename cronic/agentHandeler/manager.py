@@ -1,6 +1,4 @@
-import flask
 import json
-import requests
 import os
 import datetime
 import uuid
@@ -9,10 +7,10 @@ import base64
 from utils import endpointHandeler
 from utils.taskHandeler import AgentManager
 from utils.endpointHandeler import EndpointHandeler
-from utils.kubeHandeler import KubeHandeler
+from tasks import taskRun
 TIMEOUT = 0.5
 
-def deployTask(endpoint:EndpointHandeler, agentManager:AgentManager, k8:KubeHandeler, targer, userId):
+def deployTask(endpoint:EndpointHandeler, agentManager:AgentManager, k8, targer, userId):
     agentId = str(uuid.uuid4())
     rawCommands = endpoint.getCommand(targer)
     packages = endpoint.getPackages(rawCommands)
@@ -25,8 +23,7 @@ def deployTask(endpoint:EndpointHandeler, agentManager:AgentManager, k8:KubeHand
             taskId = agentManager.createTask(userId=userId, agentId=agentId,command=str(command))
             tasks[taskId]={"command":[command]}
         print(tasks)
-    print(f"blob: {(base64.b64encode(json.dumps(tasks).encode("utf-8")))} packages: {packages}")
-    k8.createPod(agentId=agentId, tasks=str(base64.b64encode(json.dumps(tasks).encode("utf-8"))), packages=json.dumps(packages), masterEndpoint="test")
+    taskRun.delay(agentId=agentId, tasks=tasks, packages=[], masterEndpoint="test")
 
 
 
