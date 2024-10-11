@@ -35,7 +35,6 @@ def main():
     hostEndpoint = os.getenv("APIHOST")
     agentManager = AgentManager(secret_name, rds_endpoint, region_name, db_name="aiAssesDB2")
     endpoint = EndpointHandeler(host=hostEndpoint)
-    k8 = KubeHandeler(agentImage="ubuntu")
 
     valid_user_ids = [
     "c9d9dd6d-f32f-4518-b90f-624ae281b95e",
@@ -48,7 +47,7 @@ def main():
         "bfaa3a74-b6e5-4c8d-8276-742728a00923"
     ]
 
-    deployTask(agentManager=agentManager, endpoint=endpoint, k8=k8, userId=valid_user_ids[1], targer="http://mrgtec.com")
+    deployTask(agentManager=agentManager, endpoint=endpoint, k8=None, userId=valid_user_ids[1], targer="http://mrgtec.com")
 
 
     
