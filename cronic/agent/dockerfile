@@ -1,6 +1,7 @@
 from leplusorg/kali
 
 RUN apt-get update
+RUN apt install -y kali-linux-web
 RUN apt-get install -y python3 python3-venv
 ENV TASKLIST=""
 ENV PACKAGES="[]"

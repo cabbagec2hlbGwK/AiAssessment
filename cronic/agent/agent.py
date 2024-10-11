@@ -35,15 +35,15 @@ class Agent:
         output = ""
         for command in self.commands:
             status = self.runCommand(command)
-            print("in progress")
             if status.get('success'):
-                output += f"\nthe output for the command \n --- \n {status.get('output','Null')}"
+                output += f"{status.get('output','Null')}"
             else:
                 error.append({"command":command,"error":f"the message is {status.get('error','none')}"})
         return {"output":output, "failedCommands":error}
 
     def runCommand(self, command):
         try:
+            print(f"running :{command}")
             process = subprocess.Popen(
                 ['/bin/bash', '-c', command],  
                 stdout=subprocess.PIPE,       
@@ -75,6 +75,8 @@ class Agent:
             }
 
 
+def release(results, agentId, callback):
+    res = requests.post(url=callback,json=json.dumps({"agentId":agentId, "results":results,"})) 
 class agentProbe:
     def __init__(self, endpoint, agentId) -> None:
         self.agentId = agentId
@@ -85,13 +87,14 @@ class agentProbe:
 
 
 def main():
-    rawTask = json.loads(os.getenv("TASKLIST",""))
-    packages = os.getenv("PACKAGES","[]")
+    rawTask = os.getenv("TASKLIST","")
+    packages = os.getenv("PACKAGES",'["curl"]')
     agentId = os.getenv("AGENTID")
     masterEndoint = os.getenv("MASTERENDPOINT")
-    if not rawTask:
+    if not rawTask or not packages:
         print("no commands passed")
         return False
+    print(json.loads(packages.strip()))
     try:
         tasks = json.loads(base64.b64decode(rawTask).decode("utf-8"))
         agentSetup = Agent(taskId="", packages=json.loads(packages), envCommands=[], commands=[])
@@ -101,7 +104,9 @@ def main():
         for key, values in tasks.items():
             agent = Agent(taskId="",packages=[], envCommands=[], commands=values.get("command"))
             result = agent.execute()
+            print(f"key is {key}")
             results[key]={"results":result}
+        release(results=results, agentId=agentId, callback=masterEndoint)
     except Exception as e:
         print(e)
 

