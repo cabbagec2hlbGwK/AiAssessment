@@ -2,7 +2,7 @@ import subprocess
 import requests
 import json
 from celery import Celery
-app = Celery('tasks', broker='redis://localhost:6379/0')
+app = Celery('tasks', broker='redis://:dctestpass@3.142.123.195:6379/0')
 
 class workerDivider:
     def __init__(self, brokerHost, brokerPassword, brokerPort=6379, dbNumber=0) -> None:
@@ -50,6 +50,7 @@ class Agent:
                 output += f"{status.get('output','Null')}"
             else:
                 error.append({"command": command, "error": f"the message is {status.get('error','none')}"})
+        print(f"error is :{error} \n-----------------------\n output is {output}")
         return {"output": output, "failedCommands": error}
 
     def runCommand(self, command):
