@@ -4,34 +4,115 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard</title>
+    <style>
+        /* Style for the report container */
+        #reportContainer {
+            margin-top: 20px;
+            border: 1px solid #ccc;
+            padding: 20px;
+            display: none; /* Initially hidden */
+            background-color: #f9f9f9;
+            border-radius: 5px;
+        }
+
+        #reportContainer h2 {
+            margin-top: 0;
+        }
+
+        pre {
+            white-space: pre-wrap; /* Ensure the content wraps nicely */
+            word-wrap: break-word; /* Ensure long words break properly */
+        }
+
+        .json-data {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            padding: 10px;
+            border-radius: 4px;
+            margin-top: 10px;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+    </style>
 </head>
 <body>
     <h1>Vulnerability Assessment Report</h1>
 
     <form method="post">
         {% csrf_token %}
-        {{ form.as_p }}  <!-- This will automatically render the email, website_url, and report_type fields -->
+        {{ form.as_p }}
         <button type="submit">Generate Report</button>
     </form>
 
+    <!-- Div to display the report -->
+    <div id="reportContainer">
+        <h2>Generated Report</h2>
+        <pre id="reportContent">The report will be displayed here...</pre>
+    </div>
+
+    <!-- Div for displaying JSON template data -->
+    <div id="reportTemplateContainer" style="display:none;">
+        <h2>Report Template</h2>
+        <pre id="reportTemplateContent">Loading template data...</pre>
+    </div>
+
     <script>
-    const form = document.querySelector('form');
-    form.addEventListener('submit', async function(event) {
-        event.preventDefault();
-        const formData = new FormData(form);
+        const form = document.querySelector('form');
 
-        const response = await fetch(window.location.href, {
-            method: 'POST',
-            body: formData
+        form.addEventListener('submit', async function (event) {
+            event.preventDefault();  // Prevent the default form submission
+
+            const formData = new FormData(form);  // Collect the form data
+
+            try {
+                const response = await fetch(window.location.href, {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRFToken': formData.get('csrfmiddlewaretoken'),
+                    },
+                    body: formData,
+                });
+
+                const result = await response.json();  // Parse the JSON response
+
+                // Select the report container and content elements
+                const reportContainer = document.getElementById('reportContainer');
+                const reportContent = document.getElementById('reportContent');
+                const reportTemplateContainer = document.getElementById('reportTemplateContainer');
+                const reportTemplateContent = document.getElementById('reportTemplateContent');
+
+                if (result.status === 'success') {
+                    // Display report content in human-readable format
+                    const formattedReport = `
+                        Email: ${result.report.email}\n
+                        Website URL: ${result.report.website_url}\n
+                        Report Type: ${result.report.report_type}\n
+                        Report Content: ${result.report.report_content}\n
+                    `;
+
+                    // Update the report content
+                    reportContent.textContent = formattedReport;
+
+                    // Make the report container visible
+                    reportContainer.style.display = 'block';
+
+                    // Now, format and display the report template
+                    const formattedTemplate = JSON.stringify(result.report.report_template, null, 2);
+                    reportTemplateContent.textContent = formattedTemplate;
+
+                    // Make the report template container visible
+                    reportTemplateContainer.style.display = 'block';
+
+                } else {
+                    // If failed, display an error message
+                    alert('Failed to generate report: ' + result.message);
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Failed to generate report due to server error');
+            }
         });
-
-        const result = await response.json();
-        if (result.status === 'success') {
-            alert('Report generated: ' + JSON.stringify(result.report, null, 2));
-        } else {
-            alert('Failed to generate report');
-        }
-    });
     </script>
+    
 </body>
 </html>
