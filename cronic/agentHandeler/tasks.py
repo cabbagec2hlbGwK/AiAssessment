@@ -1,6 +1,7 @@
 import subprocess
 import requests
 import json
+from ingester import release
 from celery import Celery
 app = Celery('tasks', broker='redis://:dctestpass@3.142.123.195:6379/0')
 
@@ -73,11 +74,9 @@ class Agent:
             return {"success": False, "output": "", "error": str(e), "message": "An error occurred while executing the command"}
 
 
-def release(results, agentId, callback):
-    res = requests.post(url=callback, json={"agentId": agentId, "results": results})
 
 @app.task
-def taskRun(tasks, packages, agentId):
+def taskRun(tasks, packages, agentId, userId):
     try:
         results = dict()
         for key, values in tasks.items():
@@ -85,7 +84,7 @@ def taskRun(tasks, packages, agentId):
             result = agent.execute()
             print(f"key is {key}")
             results[key] = {"results": result}
-        #release(results=results, agentId=agentId, callback=masterEndpoint)
+        release.delay(results=results, agentId=agentId, userId=userId)
         return 0
     except Exception as e:
         print(e)
