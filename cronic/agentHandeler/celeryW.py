@@ -6,18 +6,18 @@ app = Celery("worker_ai", broker=brokerEndpoint)
 
 app.conf.task_queues = {
     'queue_task1': {
-        'exchange': 'queue_task1',
+        'exchange': 'command_task',
         'routing_key': 'task1',
     },
     'queue_task2': {
-        'exchange': 'queue_task2',
+        'exchange': 'post_execution',
         'routing_key': 'task2',
     }
 }
 
 app.conf.task_routes = {
-    'tasks.release.release': {'queue': 'queue_task1'},
-    'tasks.tasks.taskRun': {'queue': 'queue_task2'}
+    'tasks.release.release': {'queue': 'command_task'},
+    'tasks.tasks.taskRun': {'queue': 'post_execution'}
 }
 
 app.autodiscover_tasks(['agentHandeler.tasks'])
