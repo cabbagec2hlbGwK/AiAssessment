@@ -1,6 +1,6 @@
 import os
-from ..utils.taskHandeler import AgentManager
-from ..utils.endpointHandeler import EndpointHandeler
+from cronic.agentHandeler.utils.taskHandeler import AgentManager
+from cronic.agentHandeler.utils.endpointHandeler import EndpointHandeler
 from celery import shared_task
 
 secret_name = os.getenv("secret_name")

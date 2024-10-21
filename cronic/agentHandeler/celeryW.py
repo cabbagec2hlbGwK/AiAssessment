@@ -16,8 +16,8 @@ app.conf.task_queues = {
 }
 
 app.conf.task_routes = {
-    'tasks.release.release': {'queue': 'command_task'},
-    'tasks.tasks.taskRun': {'queue': 'post_execution'}
+    'cronic.agentHandeler.tasks.release.release': {'queue': 'command_task'},
+    'cronic.agentHandeler.tasks.tasks.taskRun': {'queue': 'post_execution'}
 }
 
-app.autodiscover_tasks(['agentHandeler.tasks'])
+app.autodiscover_tasks(['cronic.agentHandeler.tasks'])

@@ -1,7 +1,7 @@
 import subprocess
 import requests
 import json
-from .release import release
+from cronic.agentHandeler.tasks.release import release
 from celery import shared_task
 
 class Agent:
