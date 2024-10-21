@@ -11,6 +11,7 @@ class EndpointHandeler:
     def getCommand(self, data):
         res = requests.post(url=f"{self.host}/{self.gc}", json={"body":str(data)})
         for counter in range(5):
+            print(res.json()[0]).get('command'))
             if json.loads(res.json()[0]).get('command'):
                 return res.json()
             res = requests.post(url=f"{self.host}/{self.gc}", json={"body":str(data)})
