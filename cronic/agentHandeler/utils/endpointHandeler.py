@@ -10,6 +10,11 @@ class EndpointHandeler:
         self.ei = extInformation
     def getCommand(self, data):
         res = requests.post(url=f"{self.host}/{self.gc}", json={"body":str(data)})
+        for counter in range(5):
+            if json.loads(res.json()[0]).get('command'):
+                return res.json()
+            res = requests.post(url=f"{self.host}/{self.gc}", json={"body":str(data)})
+
         return res.json()
     def getPackages(self, data):
         res = requests.post(url=f"{self.host}/{self.gp}", json={"body":str(data)})
