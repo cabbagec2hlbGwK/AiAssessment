@@ -43,7 +43,7 @@ def main():
         "bfaa3a74-b6e5-4c8d-8276-742728a00923"
     ]
 
-    deployTask(agentManager=agentManager, endpoint=endpoint, userId=valid_user_ids[1], targer="http://mrgtec.com")
+    deployTask(agentManager=agentManager, endpoint=endpoint, userId=valid_user_ids[1], targer="localhost")
 
 
     

@@ -198,10 +198,12 @@ class AgentManager:
         except Exception as e:
             print(e)
             return False
+# taskStatus ENUM('success', 'error', 'expired', 'active') NOT NULL DEFAULT 'active',
+
     def setTaskSuccess(self, taskId, output):
         try:
             with self.connection.cursor() as cursor:
-                query = "UPDATE task_list SET output = %s WHERE taskId = %s"
+                query = "UPDATE task_list SET output = %s, taskStatus = 'success' WHERE taskId = %s"
                 cursor.execute(query, (str(output), taskId))
                 self.connection.commit() 
                 return True
@@ -213,7 +215,7 @@ class AgentManager:
             errorCounter = int(self.getErrorCounter(taskId))+1
         try:
             with self.connection.cursor() as cursor:
-                query = "UPDATE task_list SET error = %s WHERE taskId = %s"
+                query = "UPDATE task_list SET error = %s, taskStatus = 'error' WHERE taskId = %s"
                 cursor.execute(query, (str(error), taskId))
                 self.connection.commit() 
                 return True
