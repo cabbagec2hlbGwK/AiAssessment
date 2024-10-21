@@ -77,7 +77,7 @@ def release(results, agentId, callback):
     res = requests.post(url=callback, json={"agentId": agentId, "results": results})
 
 @app.task
-def taskRun(tasks, packages, agentId, masterEndpoint):
+def taskRun(tasks, packages, agentId):
     try:
         results = dict()
         for key, values in tasks.items():

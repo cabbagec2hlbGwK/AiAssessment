@@ -10,7 +10,7 @@ from utils.endpointHandeler import EndpointHandeler
 from tasks import taskRun
 TIMEOUT = 0.5
 
-def deployTask(endpoint:EndpointHandeler, agentManager:AgentManager, k8, targer, userId):
+def deployTask(endpoint:EndpointHandeler, agentManager:AgentManager, targer, userId):
     agentId = str(uuid.uuid4())
     rawCommands = endpoint.getCommand(targer)
     packages = endpoint.getPackages(rawCommands)
@@ -47,7 +47,7 @@ def main():
         "bfaa3a74-b6e5-4c8d-8276-742728a00923"
     ]
 
-    deployTask(agentManager=agentManager, endpoint=endpoint, k8=None, userId=valid_user_ids[1], targer="http://mrgtec.com")
+    deployTask(agentManager=agentManager, endpoint=endpoint, userId=valid_user_ids[1], targer="http://mrgtec.com")
 
 
     

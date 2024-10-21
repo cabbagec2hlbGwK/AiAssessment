@@ -92,7 +92,10 @@ class AgentManager:
             endpoint VARCHAR(255),
             Detailed BOOLEAN DEFAULT 0,
             jobState ENUM('success', 'error', 'expired', 'active', 'waiting') NOT NULL DEFAULT 'waiting',
-            timeStamp TIMESTAMP
+            timeStamp TIMESTAMP,
+            counter INT DEFAULT 0,
+            resultData BLOOB DEFAULT "",
+            information VARCHAR(255) DEFAUTLT ""
         );
         """
         create_table_query_task = f"""
@@ -127,7 +130,7 @@ class AgentManager:
             self.connection.rollback()
             raise e
 
-    def crateUser(self, name, email, endpoint, detailedReport):
+    def createUser(self, name, email, endpoint, detailedReport):
         userId = str(uuid.uuid4())
         try:
             with self.connection.cursor() as cursor:
@@ -169,6 +172,14 @@ class AgentManager:
         return results
     def getUser(self, userId, userName=""):
         pass
+    def getUserCounter(self, userId):
+        with self.connection.cursor() as cursor:
+            query = "SELECT counter FROM user_reg WHERE userId = %s;"
+            cursor.execute(query, (userId,))
+            result = cursor.fetchone()
+            if result:
+                return result[0]
+            return 0
     def getErrorCounter(self, taskId):
         with self.connection.cursor() as cursor:
             query = "SELECT errorCounter FROM task_list WHERE taskId = %s;"
