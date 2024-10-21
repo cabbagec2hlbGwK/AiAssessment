@@ -75,7 +75,7 @@ class Agent:
 
 
 
-@app.task
+@app.task(name='tasks.taskRun')
 def taskRun(tasks, packages, agentId, userId):
     try:
         results = dict()

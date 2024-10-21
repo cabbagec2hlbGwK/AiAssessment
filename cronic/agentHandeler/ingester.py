@@ -1,7 +1,7 @@
 from celery import Celery
-app = Celery('tasks', broker='redis://:dctestpass@3.142.123.195:6379/0')
+app = Celery('release', broker='redis://:dctestpass@3.142.123.195:6379/0')
 
-@app.task
+@app.task(name='tasks.release')
 def release(results, agentId, userId):
     print(results)
     pass
