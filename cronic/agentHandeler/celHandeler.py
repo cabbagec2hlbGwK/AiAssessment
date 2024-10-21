@@ -9,4 +9,4 @@ app.conf.update(
     task_serializer='json',
     accept_content=['json'],
 )
-app.autodiscover_tasks(['.release', 'tasks'])
+app.autodiscover_tasks(['agentHandeler', 'tasks'])
