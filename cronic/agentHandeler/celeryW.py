@@ -20,4 +20,4 @@ app.conf.task_routes = {
     'tasks.tasks.taskRun': {'queue': 'queue_task2'}
 }
 
-app.autodiscover_tasks(['tasks'])
+app.autodiscover_tasks(['agentHandeler.tasks'])
