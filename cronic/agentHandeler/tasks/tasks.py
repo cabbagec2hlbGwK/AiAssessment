@@ -2,7 +2,7 @@ import subprocess
 import requests
 import json
 from cronic.agentHandeler.tasks.release import release
-from celery import shared_task
+from cronic.agentHandeler.celeryW import app
 
 class Agent:
     def __init__(self, taskId, packages, commands, envCommands) -> None:
@@ -63,7 +63,7 @@ class Agent:
 
 
 
-@shared_task
+@app.task
 def taskRun(tasks, packages, agentId, userId):
     try:
         results = dict()

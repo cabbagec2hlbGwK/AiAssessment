@@ -1,14 +1,14 @@
 import os
 from cronic.agentHandeler.utils.taskHandeler import AgentManager
 from cronic.agentHandeler.utils.endpointHandeler import EndpointHandeler
-from celery import shared_task
+from cronic.agentHandeler.celeryW import app
 
 secret_name = os.getenv("secret_name")
 rds_endpoint = os.getenv("rds_endpoint")
 region_name = os.getenv("AWS_DEFAULT_REGION")
 hostEndpoint = os.getenv("APIHOST")
 
-@shared_task
+@app.task
 def release(results, agentId, userId):
     agentManager = AgentManager(secret_name, rds_endpoint, region_name, db_name="aiAssesDB2")
     endpoint = EndpointHandeler(host=hostEndpoint)
