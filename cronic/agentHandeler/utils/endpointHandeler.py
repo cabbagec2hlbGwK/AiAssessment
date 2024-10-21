@@ -12,7 +12,7 @@ class EndpointHandeler:
         res = requests.post(url=f"{self.host}/{self.gc}", json={"body":str(data)})
         for counter in range(5):
             if res.json()[0].get('commands'):
-                print(res.json().get("commands"))
+                print(res.json()[0].get("commands"))
                 return res.json()
             res = requests.post(url=f"{self.host}/{self.gc}", json={"body":str(data)})
 
