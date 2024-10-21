@@ -63,7 +63,7 @@ class Agent:
 
 
 
-@app.task
+@app.task()
 def taskRun(tasks, packages, agentId, userId):
     try:
         results = dict()
