@@ -2,7 +2,7 @@ import subprocess
 import requests
 import json
 from release import release
-from utils.celHandeler import app
+from celHandeler import app
 
 class Agent:
     def __init__(self, taskId, packages, commands, envCommands) -> None:

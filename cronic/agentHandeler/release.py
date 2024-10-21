@@ -1,7 +1,7 @@
 import os
 from utils.taskHandeler import AgentManager
 from utils.endpointHandeler import EndpointHandeler
-from utils.celHandeler import app
+from celHandeler import app
 
 secret_name = os.getenv("secret_name")
 rds_endpoint = os.getenv("rds_endpoint")
