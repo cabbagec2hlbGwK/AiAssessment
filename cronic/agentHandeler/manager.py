@@ -13,17 +13,13 @@ TIMEOUT = 0.5
 def deployTask(endpoint:EndpointHandeler, agentManager:AgentManager, targer, userId):
     agentId = str(uuid.uuid4())
     rawCommands = endpoint.getCommand(targer)
-    packages = endpoint.getPackages(rawCommands)
-    if not packages:
-        packages=[{}]
-    packages = packages[0].get('packages','[]')
     tasks = dict()
     for commands in rawCommands:
         for command in commands.get("commands",[]):
             taskId = agentManager.createTask(userId=userId, agentId=agentId,command=str(command))
             tasks[taskId]={"command":[command]}
         print(tasks)
-    taskRun.delay(agentId=agentId, tasks=tasks, packages=[], masterEndpoint="test")
+    taskRun.delay(agentId=agentId, tasks=tasks, packages=[])
 
 
 
