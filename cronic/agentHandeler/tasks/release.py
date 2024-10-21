@@ -1,14 +1,14 @@
 import os
 from utils.taskHandeler import AgentManager
 from utils.endpointHandeler import EndpointHandeler
-from celHandeler import app
+from celery import shared_task
 
 secret_name = os.getenv("secret_name")
 rds_endpoint = os.getenv("rds_endpoint")
 region_name = os.getenv("AWS_DEFAULT_REGION")
 hostEndpoint = os.getenv("APIHOST")
 
-@app.task
+@shared_task
 def release(results, agentId, userId):
     agentManager = AgentManager(secret_name, rds_endpoint, region_name, db_name="aiAssesDB2")
     endpoint = EndpointHandeler(host=hostEndpoint)

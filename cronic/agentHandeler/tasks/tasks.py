@@ -2,7 +2,7 @@ import subprocess
 import requests
 import json
 from release import release
-from celHandeler import app
+from celery import shared_task
 
 class Agent:
     def __init__(self, taskId, packages, commands, envCommands) -> None:
@@ -63,7 +63,7 @@ class Agent:
 
 
 
-@app.task
+@shared_task
 def taskRun(tasks, packages, agentId, userId):
     try:
         results = dict()

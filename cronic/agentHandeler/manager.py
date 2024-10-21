@@ -7,7 +7,7 @@ import base64
 from utils import endpointHandeler
 from utils.taskHandeler import AgentManager
 from utils.endpointHandeler import EndpointHandeler
-from tasks import taskRun
+from tasks.tasks import taskRun
 TIMEOUT = 0.5
 
 def deployTask(endpoint:EndpointHandeler, agentManager:AgentManager, targer, userId):
