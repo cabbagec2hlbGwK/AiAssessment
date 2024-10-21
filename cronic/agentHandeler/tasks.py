@@ -1,7 +1,7 @@
 import subprocess
 import requests
 import json
-from ingester import release
+from release import release
 from celery import Celery
 app = Celery('tasks', broker='redis://:dctestpass@3.142.123.195:6379/0')
 

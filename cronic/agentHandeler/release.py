@@ -3,6 +3,7 @@ from utils.taskHandeler import AgentManager
 from utils.endpointHandeler import EndpointHandeler
 from celery import Celery
 app = Celery('release', broker='redis://:dctestpass@3.142.123.195:6379/0')
+app.reg
 
 secret_name = os.getenv("secret_name")
 rds_endpoint = os.getenv("rds_endpoint")
