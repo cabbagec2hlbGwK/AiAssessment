@@ -16,6 +16,7 @@ def release(results, agentId, userId):
     for taskId, value in results.items():
         print(taskId)
         if len(value.get("results",{}).get('failedCommands',[]))>0:
+            print(value.get("results",{}).get('failedCommands',[]))
             res = agentManager.setTaskError(taskId, error=" ".join(value.get("results",{}).get('failedCommands',[])))
             print(f"the task: {taskId} was successfully updated with {res}")
         else:
