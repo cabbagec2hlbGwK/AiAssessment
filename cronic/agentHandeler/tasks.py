@@ -2,19 +2,7 @@ import subprocess
 import requests
 import json
 from release import release
-from celery import Celery
-app = Celery('tasks', broker='redis://:dctestpass@3.142.123.195:6379/0')
-
-class workerDivider:
-    def __init__(self, brokerHost, brokerPassword, brokerPort=6379, dbNumber=0) -> None:
-        self.brokerHost = brokerHost
-        self.brokerPassword = brokerPassword
-        self.brokerPort = brokerPort
-        self.dbNumber = dbNumber
-        self.brokerCon = self.createBrokerConnection()
-
-    def createBrokerConnection(self):
-        return Celery('tasks', broker=f'redis://{self.brokerHost}:{self.brokerPort}/{self.dbNumber}')
+from utils.celHandeler import app
 
 class Agent:
     def __init__(self, taskId, packages, commands, envCommands) -> None:
@@ -75,7 +63,7 @@ class Agent:
 
 
 
-@app.task(name='tasks.taskRun')
+@app.task
 def taskRun(tasks, packages, agentId, userId):
     try:
         results = dict()
