@@ -1,4 +1,6 @@
 import os
+
+from requests import get
 from cronic.agentHandeler.utils.taskHandeler import AgentManager
 from cronic.agentHandeler.utils.endpointHandeler import EndpointHandeler
 from cronic.agentHandeler.celeryW import app
@@ -16,7 +18,8 @@ def release(results, agentId, userId):
         print(taskId)
         if len(value.get("results",{}).get('failedCommands',[]))>0:
             print(value.get("results",{}).get('failedCommands',[]))
-            res = agentManager.setTaskError(taskId, error=" ".join(value.get("results",{}).get('failedCommands',[])))
+            print(value.get("results").get("failedCommands"))
+            #res = agentManager.setTaskError(taskId, error=" ".join(value.get("results",{}).get('failedCommands',[])))
             print(f"the task: {taskId} was successfully updated with {res}")
         else:
             res = agentManager.setTaskSuccess(taskId," ".join(value.get("results",{}).get('failedCommands',[])))
