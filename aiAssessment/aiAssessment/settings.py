@@ -10,7 +10,9 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.1/ref/settings/
 """
 
+import os
 from pathlib import Path
+# from dashboard.agent_manager import AgentManager
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -26,6 +28,15 @@ SECRET_KEY = 'django-insecure-9h^*2d+((s2kv5%+5_u!$gky^1rw$#*khz$5y67cu1o-=e^!cm
 DEBUG = True
 
 ALLOWED_HOSTS = []
+
+# Environment variables for AWS region and secret name
+# AWS_DEFAULT_REGION = os.getenv('AWS_REGION')  
+# SECRET_NAME = os.getenv('SECRET_NAME')  
+# RDS_ENDPOINT = os.getenv('RDS_ENDPOINT')  
+
+# Create an instance of AgentManager
+# agent_manager = AgentManager(secret_name=SECRET_NAME, rds_endpoint=RDS_ENDPOINT, region_name=AWS_DEFAULT_REGION)
+
 
 
 # Application definition
@@ -74,24 +85,21 @@ WSGI_APPLICATION = 'aiAssessment.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 
+# Set up the DATABASES configuration
+# DATABASES = {
+#     'default': agent_manager.get_django_database_settings()
+# }
+
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'django_db',  
+        'USER': 'django_user',  
+        'PASSWORD': 'django_password',  
+        'HOST': '127.0.0.1', 
+        'PORT': '3306', 
     }
-    
 }
-
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.mysql',
-#         'NAME': 'django_db',  
-#         'USER': 'django_user',  
-#         'PASSWORD': 'django_password',  
-#         'HOST': 'localhost', 
-#         'PORT': '3307', 
-#     }
-# }
 
 
 
