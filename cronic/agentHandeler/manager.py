@@ -4,26 +4,22 @@ import datetime
 import uuid
 import random
 import base64
-from utils import endpointHandeler
-from utils.taskHandeler import AgentManager
-from utils.endpointHandeler import EndpointHandeler
-from tasks import taskRun
+from cronic.agentHandeler.utils import endpointHandeler
+from cronic.agentHandeler.utils.taskHandeler import AgentManager
+from cronic.agentHandeler.utils.endpointHandeler import EndpointHandeler
+from cronic.agentHandeler.tasks.tasks import taskRun
 TIMEOUT = 0.5
 
-def deployTask(endpoint:EndpointHandeler, agentManager:AgentManager, k8, targer, userId):
+def deployTask(endpoint:EndpointHandeler, agentManager:AgentManager, targer, userId):
     agentId = str(uuid.uuid4())
     rawCommands = endpoint.getCommand(targer)
-    packages = endpoint.getPackages(rawCommands)
-    if not packages:
-        packages=[{}]
-    packages = packages[0].get('packages','[]')
     tasks = dict()
     for commands in rawCommands:
         for command in commands.get("commands",[]):
             taskId = agentManager.createTask(userId=userId, agentId=agentId,command=str(command))
             tasks[taskId]={"command":[command]}
         print(tasks)
-    taskRun.delay(agentId=agentId, tasks=tasks, packages=[], masterEndpoint="test")
+    taskRun.delay(agentId=agentId, tasks=tasks, packages=[], userId=userId)
 
 
 
@@ -47,7 +43,7 @@ def main():
         "bfaa3a74-b6e5-4c8d-8276-742728a00923"
     ]
 
-    deployTask(agentManager=agentManager, endpoint=endpoint, k8=None, userId=valid_user_ids[1], targer="http://mrgtec.com")
+    deployTask(agentManager=agentManager, endpoint=endpoint, userId=valid_user_ids[1], targer="http://localhost:8000")
 
 
     

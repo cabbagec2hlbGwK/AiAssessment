@@ -1,19 +1,8 @@
 import subprocess
 import requests
 import json
-from celery import Celery
-app = Celery('tasks', broker='redis://:dctestpass@3.142.123.195:6379/0')
-
-class workerDivider:
-    def __init__(self, brokerHost, brokerPassword, brokerPort=6379, dbNumber=0) -> None:
-        self.brokerHost = brokerHost
-        self.brokerPassword = brokerPassword
-        self.brokerPort = brokerPort
-        self.dbNumber = dbNumber
-        self.brokerCon = self.createBrokerConnection()
-
-    def createBrokerConnection(self):
-        return Celery('tasks', broker=f'redis://{self.brokerHost}:{self.brokerPort}/{self.dbNumber}')
+from cronic.agentHandeler.tasks.release import release
+from cronic.agentHandeler.celeryW import app
 
 class Agent:
     def __init__(self, taskId, packages, commands, envCommands) -> None:
@@ -73,19 +62,19 @@ class Agent:
             return {"success": False, "output": "", "error": str(e), "message": "An error occurred while executing the command"}
 
 
-def release(results, agentId, callback):
-    res = requests.post(url=callback, json={"agentId": agentId, "results": results})
 
-@app.task
-def taskRun(tasks, packages, agentId, masterEndpoint):
+@app.task()
+def taskRun(tasks, packages, agentId, userId):
     try:
         results = dict()
         for key, values in tasks.items():
+            tempStore = {}
             agent = Agent(taskId="", packages=packages, envCommands=[], commands=values.get("command"))
             result = agent.execute()
             print(f"key is {key}")
+            tempStore[key] = {"results": result}
+            release.delay(results=tempStore, agentId=agentId, userId=userId)
             results[key] = {"results": result}
-        #release(results=results, agentId=agentId, callback=masterEndpoint)
         return 0
     except Exception as e:
         print(e)
