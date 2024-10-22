@@ -18,8 +18,9 @@ def deployTask(endpoint:EndpointHandeler, agentManager:AgentManager, targer, use
         for command in commands.get("commands",[]):
             taskId = agentManager.createTask(userId=userId, agentId=agentId,command=str(command))
             tasks[taskId]={"command":[command]}
+            taskRun.delay(agentId=agentId, tasks=tasks, packages=[], userId=userId)
+            tasks = dict()
         print(tasks)
-    taskRun.delay(agentId=agentId, tasks=tasks, packages=[], userId=userId)
 
 
 
