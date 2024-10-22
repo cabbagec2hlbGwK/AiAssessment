@@ -16,13 +16,12 @@ def release(results, agentId, userId):
     endpoint = EndpointHandeler(host=hostEndpoint)
     for taskId, value in results.items():
         print(taskId)
+        print(value.get("results").get("failedCommands"))
         if len(value.get("results",{}).get('failedCommands',[]))>0:
-            print(value.get("results",{}).get('failedCommands',[]))
-            print(value.get("results").get("failedCommands"))
-            #res = agentManager.setTaskError(taskId, error=" ".join(value.get("results",{}).get('failedCommands',[])))
+            res = agentManager.setTaskError(taskId, error=str(value.get("results",{}).get('failedCommands',[])))
             print(f"the task: {taskId} was successfully updated with {res}")
         else:
-            res = agentManager.setTaskSuccess(taskId," ".join(value.get("results",{}).get('failedCommands',[])))
+            res = agentManager.setTaskSuccess(taskId,str(value.get("results",{}).get('failedCommands',[])))
             print(f"the task: {taskId} was error updated with {res}")
 
 
