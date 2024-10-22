@@ -68,11 +68,13 @@ def taskRun(tasks, packages, agentId, userId):
     try:
         results = dict()
         for key, values in tasks.items():
+            tempStore = {}
             agent = Agent(taskId="", packages=packages, envCommands=[], commands=values.get("command"))
             result = agent.execute()
             print(f"key is {key}")
+            tempStore[key] = {"results": result}
+            release.delay(results=tempStore, agentId=agentId, userId=userId)
             results[key] = {"results": result}
-        release.delay(results=results, agentId=agentId, userId=userId)
         return 0
     except Exception as e:
         print(e)
