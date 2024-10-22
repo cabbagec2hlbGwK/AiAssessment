@@ -73,6 +73,8 @@ def taskRun(tasks, packages, agentId, userId):
             result = agent.execute()
             print(f"key is {key}")
             tempStore[key] = {"results": result}
+            print("--------------------------------------------------------------")
+            print(tempStore)
             release.delay(results=tempStore, agentId=agentId, userId=userId)
             results[key] = {"results": result}
         return 0
