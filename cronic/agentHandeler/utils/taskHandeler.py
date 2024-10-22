@@ -165,6 +165,18 @@ class AgentManager:
         query = "SELECT * FROM task_list WHERE AgentId = %s;"
         results = self.execute_query(query, (agentId,))
         return results
+    def getUserTask(self,userId):
+        query = "SELECT * FROM task_list WHERE usertId = %s;"
+        results = self.execute_query(query, (userId,))
+        return results
+    def getUserSuccessTask(self,userId):
+        query = "SELECT * FROM task_list WHERE usertId = %s AND taskStatus = 'success';"
+        results = self.execute_query(query, (userId,))
+        return results
+    def getUserErrorTask(self,userId):
+        query = "SELECT * FROM task_list WHERE usertId = %s AND taskStatus = 'error';"
+        results = self.execute_query(query, (userId,))
+        return results
 
     def getTask(self,taskId):
         query = "SELECT * FROM task_list WHERE taskId = %s;"
