@@ -41,6 +41,11 @@ class AgentManager:
                 raise e
 
             return json.loads(secret)
+        return {
+            "username": "local_user",  
+            "password": "local_password",  
+        }
+
 
     def connect_to_database(self):
         try:
@@ -63,6 +68,7 @@ class AgentManager:
         return connection
 
 
+
     # Function to write (insert) user data into the database
     def insert_user(self, name, email, endpoint, detailed_report):
         user_id = str(uuid.uuid4())  # Generate a unique UUID for the user
@@ -79,23 +85,6 @@ class AgentManager:
         except Exception as e:
             print(f"Error inserting user: {e}")
             return False
-
-    # # Function to read (fetch) user data from the database
-    # def fetch_user(self, user_id):
-    #     try:
-    #         with self.connection.cursor() as cursor:
-    #             select_user_query = """
-    #             SELECT userId, name, email, endpoint, resultData
-    #             FROM user_reg
-    #             WHERE userId = %s AND Detailed = 0;
-    #             """
-    #             cursor.execute(select_user_query, [user_id])
-    #             user_data = cursor.fetchone()  # Fetch one row from the result
-    #             return user_data  # Return the user data tuple (or None if not found)
-    #     except Exception as e:
-    #         print(f"Error fetching user: {e}")
-    #         return None
-
 
 
     def fetch_user(self, user_id):
