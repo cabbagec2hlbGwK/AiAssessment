@@ -8,6 +8,7 @@ from cronic.agentHandeler.utils import endpointHandeler
 from cronic.agentHandeler.utils.taskHandeler import AgentManager
 from cronic.agentHandeler.utils.endpointHandeler import EndpointHandeler
 from cronic.agentHandeler.tasks.tasks import taskRun
+from utils import taskHandeler
 TIMEOUT = 0.5
 
 def deployTask(endpoint:EndpointHandeler, agentManager:AgentManager, targer, userId):
@@ -43,6 +44,10 @@ def main():
         "5da75265-bcbe-42b4-8629-46c88dcc6e6d",
         "bfaa3a74-b6e5-4c8d-8276-742728a00923"
     ]
+    res = agentManager.createUser(name="john",email="john@gmail.com",endpoint="google.com", detailedReport=True)
+    print(res)
+    input()
+    
 
     deployTask(agentManager=agentManager, endpoint=endpoint, userId=valid_user_ids[1], targer="http://localhost:8000")
 
