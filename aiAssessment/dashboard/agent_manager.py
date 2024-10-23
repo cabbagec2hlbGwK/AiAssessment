@@ -39,6 +39,7 @@ class AgentManager:
         except ClientError as e:
             raise e
 
+        print(secret)
         return json.loads(secret)
 
 
