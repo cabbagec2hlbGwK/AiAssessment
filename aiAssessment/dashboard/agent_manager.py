@@ -13,7 +13,7 @@ class AgentManager:
         
         if use_local:
             # Local database connection settings
-            #self.connection = self.connect_to_local_database()
+            pass
         else:
             # AWS RDS connection settings
             self.rds_endpoint = rds_endpoint
