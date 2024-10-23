@@ -36,11 +36,10 @@ def main():
     agentManager = AgentManager(secret_name, rds_endpoint, region_name, db_name="aiAssesDB3")
     endpoint = EndpointHandeler(host=hostEndpoint)
 
-    res = agentManager.createUser(name="john",email="john@gmail.com",endpoint="google.com", detailedReport=True)
-    print(res)
+    #res = agentManager.createUser(name="john",email="john@gmail.com",endpoint="google.com", detailedReport=True)
     
 
-    deployTask(agentManager=agentManager, endpoint=endpoint, userId="d57a5441-0d7f-46a4-a02a-726d747f7bb2", targer="http://localhost:8000")
+    deployTask(agentManager=agentManager, endpoint=endpoint, userId="baed8d83-1660-481b-98dd-620dc15ee37c", targer="http://localhost:8000")
 
 
     
