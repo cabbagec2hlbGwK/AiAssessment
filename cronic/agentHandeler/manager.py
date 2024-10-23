@@ -9,6 +9,8 @@ from cronic.agentHandeler.utils.taskHandeler import AgentManager
 from cronic.agentHandeler.utils.endpointHandeler import EndpointHandeler
 from cronic.agentHandeler.tasks.tasks import taskRun
 from cronic.agentHandeler.utils import taskHandeler
+from utils.taskHandeler import AgentManager as agent
+from utils.endpointHandeler import EndpointHandeler as endpointH
 TIMEOUT = 0.6
 
 def deployTask(endpoint:EndpointHandeler, agentManager:AgentManager, targer, userId):
@@ -23,7 +25,20 @@ def deployTask(endpoint:EndpointHandeler, agentManager:AgentManager, targer, use
             tasks[taskId]={"command":[command]}
             taskRun.delay(agentId=agentId, tasks=tasks, packages=[], userId=userId)
             tasks = dict()
-        print(tasks)
+
+def handelNewRequest(agentManager:agent, endpointManager:endpointH):
+    running = True
+    while running:
+        newUsers = agentManager.getWaitingUser()
+        print(newUsers)
+        input("waiting for res")
+        if len(newUsers) <= 0:
+            continue
+        for userId in newUsers:
+            print(f"New User registered {userId}")
+            deployTask(agentManager=agentManager, endpoint=endpointManager, userId=userId, targer=agentManager.getUserTarger(userId))
+
+
 
 
 

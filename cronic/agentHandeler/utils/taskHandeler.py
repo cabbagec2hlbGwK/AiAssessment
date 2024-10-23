@@ -201,9 +201,23 @@ class AgentManager:
             return False
         else:
             return True
+
+    def getUser(self):
+        query = "SELECT * FROM user_reg;"
+        results = self.execute_query(query)
         return results
-    def getUser(self, userId, userName=""):
-        pass
+    def getWaitingUser(self):
+        query = "SELECT userId FROM user_reg WHERE jobState = 'waiting';"
+        results = self.execute_query(query)
+        return results
+    def getUserTarger(self, userId):
+        with self.connection.cursor() as cursor:
+            query = "SELECT endpoint FROM user_reg WHERE userId = %s;"
+            cursor.execute(query, (userId,))
+            result = cursor.fetchone()
+            if result:
+                return result[0]
+            return 0
     def getUserCounter(self, userId):
         with self.connection.cursor() as cursor:
             query = "SELECT counter FROM user_reg WHERE userId = %s;"
@@ -225,6 +239,16 @@ class AgentManager:
             with self.connection.cursor() as cursor:
                 query = "UPDATE user_reg SET counter = %s WHERE userId = %s"
                 cursor.execute(query, (self.getUserCounter(userId)+1, userId))
+                self.connection.commit() 
+                return True
+        except Exception as e:
+            print(e)
+            return False
+    def setUserActive(self, userId):
+        try:
+            with self.connection.cursor() as cursor:
+                query = "UPDATE user_reg SET jobState = 'active' WHERE userId = %s"
+                cursor.execute(query, (userId))
                 self.connection.commit() 
                 return True
         except Exception as e:

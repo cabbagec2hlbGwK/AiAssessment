@@ -17,9 +17,11 @@ class EndpointHandeler:
             res = requests.post(url=f"{self.host}/{self.gc}", json={"body":str(data)})
 
         return res.json()
-    def getPackages(self, data):
+    def getReport(self, data):
         res = requests.post(url=f"{self.host}/{self.gp}", json={"body":str(data)})
-        return res.json()
+        if res:
+            return res.json()[0]
+        return None
 
     def extInformation(self, data):
         res = requests.post(url=f"{self.host}/{self.ei}", json={"body":str(data)})
