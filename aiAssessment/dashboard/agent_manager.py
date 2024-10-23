@@ -23,7 +23,7 @@ class AgentManager:
         
         self.ensure_table_exists()  # Ensure the table exists
 
-   def get_secret(self, secret_name):
+    def get_secret(self, secret_name):
         session = boto3.session.Session()
         print(f"the region is {session.region_name}")
         client = session.client(
