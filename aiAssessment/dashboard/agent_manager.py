@@ -7,13 +7,13 @@ from pymysql import OperationalError
 from botocore.exceptions import ClientError
 
 class AgentManager:
-    def __init__(self, secret_name=None, rds_endpoint=None, region_name=None, db_name="defaultDB", use_local=False):
+    def __init__(self, secret_name=None, rds_endpoint=None, region_name=None, db_name="aiAssesDB1", use_local=False):
         self.use_local = use_local
         self.db_name = db_name
         
         if use_local:
             # Local database connection settings
-            self.connection = self.connect_to_local_database()
+            #self.connection = self.connect_to_local_database()
         else:
             # AWS RDS connection settings
             self.rds_endpoint = rds_endpoint
@@ -41,26 +41,6 @@ class AgentManager:
                 raise e
 
             return json.loads(secret)
-        return {
-            "username": "local_user",  # Replace with your local username
-            "password": "local_password",  # Replace with your local password
-        }
-
-    def connect_to_local_database(self):
-        try:
-            connection = pymysql.connect(
-                host='127.0.0.1',
-                user='django_user',  
-                password='django_password',
-                db='django_db',
-                port=3306, 
-                connect_timeout=5
-            )
-            print("Local Connection successful")
-        except OperationalError as e:
-            print(f"Error connecting to local database: {e}")
-            raise e
-        return connection
 
     def connect_to_database(self):
         try:
@@ -82,16 +62,6 @@ class AgentManager:
                 raise e
         return connection
 
-    def get_django_database_settings(self):
-        """Return the settings for Django's DATABASES configuration."""
-        return {
-            'ENGINE': 'django.db.backends.mysql',
-            'NAME': 'django_db',
-            'USER': self.secret["username"] if not self.use_local else 'django_user',
-            'PASSWORD': self.secret["password"] if not self.use_local else 'django_password',
-            'HOST': self.rds_endpoint if not self.use_local else '127.0.0.1',
-            'PORT': '3306',
-        }
 
     # Function to write (insert) user data into the database
     def insert_user(self, name, email, endpoint, detailed_report):

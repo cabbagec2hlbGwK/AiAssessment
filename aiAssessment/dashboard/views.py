@@ -12,7 +12,7 @@ def dashboard_view(request):
     if request.method == 'POST':
         form = ReportForm(request.POST)
 
-        agent_manager = AgentManager(use_local=True)
+        agent_manager = AgentManager(use_local=False)
 
         if form.is_valid():
             name = form.cleaned_data.get('username')
