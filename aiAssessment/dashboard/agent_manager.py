@@ -23,28 +23,23 @@ class AgentManager:
         
         self.ensure_table_exists()  # Ensure the table exists
 
-    def get_secret(self, secret_name):
-        if not self.use_local:  # Only get secrets if not in local mode
-            session = boto3.session.Session()
-            print(f"the region is {session.region_name}")
-            client = session.client(
-                service_name='secretsmanager',
-                region_name=self.region_name
+   def get_secret(self, secret_name):
+        session = boto3.session.Session()
+        print(f"the region is {session.region_name}")
+        client = session.client(
+            service_name='secretsmanager',
+            region_name=self.region_name
+        )
+
+        try:
+            get_secret_value_response = client.get_secret_value(
+                SecretId=secret_name
             )
+            secret = get_secret_value_response['SecretString']
+        except ClientError as e:
+            raise e
 
-            try:
-                get_secret_value_response = client.get_secret_value(
-                    SecretId=secret_name
-                )
-                secret = get_secret_value_response['SecretString']
-            except ClientError as e:
-                raise e
-
-            return json.loads(secret)
-        return {
-            "username": "local_user",  
-            "password": "local_password",  
-        }
+        return json.loads(secret)
 
 
     def connect_to_database(self):
