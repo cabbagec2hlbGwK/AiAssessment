@@ -94,7 +94,7 @@ class AgentManager:
             jobState ENUM('success', 'error', 'expired', 'active', 'waiting') NOT NULL DEFAULT 'waiting',
             timeStamp TIMESTAMP,
             counter INT DEFAULT 0,
-            resultData BLOOB DEFAULT "",
+            resultData BLOOB DEFAULT NULL,
             information VARCHAR(255) DEFAUTLT ""
         );
         """
@@ -104,8 +104,8 @@ class AgentManager:
             userId VARCHAR(255),
             AgentId VARCHAR(255),
             command VARCHAR(255),
-            output BLOB DEFAULT "",
-            error BLOB DEFAULT "",
+            output BLOB DEFAULT NULL,
+            error BLOB DEFAULT NULL,
             errorCounter INT DEFAULT 0,
             taskStatus ENUM('success', 'error', 'expired', 'active') NOT NULL DEFAULT 'active',
             hasMessageBeenSent BOOLEAN DEFAULT 0,
