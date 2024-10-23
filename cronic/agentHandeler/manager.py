@@ -9,7 +9,7 @@ from cronic.agentHandeler.utils.taskHandeler import AgentManager
 from cronic.agentHandeler.utils.endpointHandeler import EndpointHandeler
 from cronic.agentHandeler.tasks.tasks import taskRun
 from utils import taskHandeler
-TIMEOUT = 0.5
+TIMEOUT = 0.6
 
 def deployTask(endpoint:EndpointHandeler, agentManager:AgentManager, targer, userId):
     agentId = str(uuid.uuid4())
