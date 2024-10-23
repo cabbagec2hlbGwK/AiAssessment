@@ -60,15 +60,14 @@
         const form = document.querySelector('form');
     
         form.addEventListener('submit', async function (event) {
-            event.preventDefault();  // Prevent the default form submission
-    
-            const formData = new FormData(form);  // Collect the form data
+            event.preventDefault();  
+            const formData = new FormData(form); 
     
             try {
                 const response = await fetch(window.location.href, {
                     method: 'POST',
                     headers: {
-                        'X-CSRFToken': formData.get('csrfmiddlewaretoken'),  // Get CSRF token for security
+                        'X-CSRFToken': formData.get('csrfmiddlewaretoken'),
                     },
                     body: formData,
                 });
@@ -76,26 +75,14 @@
                 const result = await response.json();  // Parse the JSON response
                 console.log("result", result);
     
-                // Select the report container and content elements
-                const reportContainer = document.getElementById('reportContainer');
-                const reportContent = document.getElementById('reportContent');
-    
                 if (result.status === 'success') {
-                    // Display report content in human-readable format
-                    const formattedReport = `
-                        Email: ${result.email}\n
-                        Website URL: ${result.endpoint}\n
-                        ReportData: ${result.userData}\n
-                        -----------------------------\n
-                    `;
+                    // Redirect to the report page with query parameters
+                    const reportUrl = new URL('/report/', window.location.origin);
+                    reportUrl.searchParams.append('email', result.email);
+                    reportUrl.searchParams.append('endpoint', result.endpoint);
+                    reportUrl.searchParams.append('userData', result.userData);
     
-                    // Update the report content
-                    reportContent.textContent = formattedReport;
-    
-                    // Make the report container visible
-                    reportContainer.style.display = 'block';
-    
-    
+                    window.location.href = reportUrl; 
                 } else {
                     // If failed, display an error message
                     alert('Failed to generate report: ' + result.message);
@@ -106,7 +93,3 @@
             }
         });
     </script>
-    
-    
-</body>
-</html>

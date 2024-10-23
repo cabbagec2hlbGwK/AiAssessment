@@ -44,3 +44,16 @@ def dashboard_view(request):
             return JsonResponse(response_data)
 
     return render(request, 'dashboard/dashboard.html', {'form': form})
+
+
+def report_view(request):
+    email = request.GET.get('email')
+    endpoint = request.GET.get('endpoint')
+    user_data = request.GET.get('userData')
+    
+    context = {
+        'email': email,
+        'endpoint': endpoint,
+        'user_data': user_data,
+    }
+    return render(request, 'result.html', context)
