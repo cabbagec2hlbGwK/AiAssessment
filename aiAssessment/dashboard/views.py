@@ -1,3 +1,4 @@
+import os
 from django.http import JsonResponse
 from django.shortcuts import render
 from django.db import connection
@@ -11,9 +12,13 @@ def dashboard_view(request):
     form = ReportForm()
 
     if request.method == 'POST':
-        form = ReportForm(request.POST)
+        form = ReportForm(request.POST) 
+        secret_name = os.getenv("secret_name")
+        rds_endpoint = os.getenv("rds_endpoint")
+        region_name = os.getenv("AWS_DEFAULT_REGION")
+        hostEndpoint = os.getenv("APIHOST")
 
-        agent_manager = AgentManager(use_local=False)
+        agent_manager = AgentManager(use_local=False, secret_name=secret_name, rds_endpoint=rds_endpoint, region_name=region_name)
 
         if form.is_valid():
             name = form.cleaned_data.get('username')

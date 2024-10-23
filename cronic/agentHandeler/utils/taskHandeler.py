@@ -182,6 +182,26 @@ class AgentManager:
         query = "SELECT * FROM task_list WHERE taskId = %s;"
         results = self.execute_query(query, (taskId,))
         return results
+    def getCompletedTask(self, userId):
+        query = "SELECT taskId FROM task_list WHERE userId = %s AND taskStatus IN ('success', 'error') AND hasMessageBeenSent = FALSE;"
+        results = self.execute_query(query, (userId,))
+        return results
+
+    def getActiveTask(self, userId):
+        query = "SELECT taskId FROM task_list WHERE userId = %s AND taskStatus ='active' AND hasMessageBeenSent = FALSE;"
+        results = self.execute_query(query, (userId,))
+        return results
+    def isSessionCompleted(self, userId):
+        totalActiveTask = len(self.getActiveTask(userId))
+        totalCompletedTask = len(self.getCompletedTask(userId))
+        total = totalActiveTask + totalCompletedTask
+        if total == 0:
+            return "none"
+        if totalActiveTask > 0:
+            return False
+        else:
+            return True
+        return results
     def getUser(self, userId, userName=""):
         pass
     def getUserCounter(self, userId):
