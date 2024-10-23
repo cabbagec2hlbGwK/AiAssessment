@@ -166,15 +166,15 @@ class AgentManager:
         results = self.execute_query(query, (agentId,))
         return results
     def getUserTask(self,userId):
-        query = "SELECT * FROM task_list WHERE usertId = %s;"
+        query = "SELECT * FROM task_list WHERE userId = %s;"
         results = self.execute_query(query, (userId,))
         return results
     def getUserSuccessTask(self,userId):
-        query = "SELECT * FROM task_list WHERE usertId = %s AND taskStatus = 'success';"
+        query = "SELECT * FROM task_list WHERE userId = %s AND taskStatus = 'success';"
         results = self.execute_query(query, (userId,))
         return results
     def getUserErrorTask(self,userId):
-        query = "SELECT * FROM task_list WHERE usertId = %s AND taskStatus = 'error';"
+        query = "SELECT * FROM task_list WHERE userId = %s AND taskStatus = 'error';"
         results = self.execute_query(query, (userId,))
         return results
 
@@ -190,7 +190,7 @@ class AgentManager:
             cursor.execute(query, (userId,))
             result = cursor.fetchone()
             if result:
-                return result[0]
+                return int(result[0])
             return 0
     def getErrorCounter(self, taskId):
         with self.connection.cursor() as cursor:
@@ -200,6 +200,16 @@ class AgentManager:
             if result:
                 return result[0]
             return 0
+    def incUserCounter(self, userId):
+        try:
+            with self.connection.cursor() as cursor:
+                query = "UPDATE user_reg SET counter = %s WHERE userId = %s"
+                cursor.execute(query, (self.getUserCounter(userId)+1, userId))
+                self.connection.commit() 
+                return True
+        except Exception as e:
+            print(e)
+            return False
     def agentHeartBeat(self,agentId):
         try:
             with self.connection.cursor() as cursor:
