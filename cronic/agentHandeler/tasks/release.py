@@ -15,9 +15,11 @@ def release(results, agentId, userId):
     agentManager = AgentManager(secret_name, rds_endpoint, region_name, db_name="aiAssesDB2")
     endpoint = EndpointHandeler(host=hostEndpoint)
     for taskId, value in results.items():
-        print(taskId)
-        print(value.get("results").get("failedCommands"))
-        if len(value.get("results",{}).get('failedCommands',[]))>0:
+        print("-----------------------------------------------------------------------------")
+        print(value)
+        print("-----------------------------------------------------------------------------")
+        print(len(value.get("results",{}).get('failedCommands',[])))
+        if len(value.get("results",{}).get('failedCommands',[]))==0:
             res = agentManager.setTaskError(taskId, error=str(value.get("results",{}).get('failedCommands',[])))
             print(f"the task: {taskId} was successfully updated with {res}")
         else:

@@ -84,7 +84,7 @@ class AgentManager:
                 raise e
 
     def create_table(self):
-        create_table_query_user= f"""
+        create_table_query_user = """
         CREATE TABLE IF NOT EXISTS user_reg (
             userId VARCHAR(255) PRIMARY KEY,
             name VARCHAR(255),
@@ -94,18 +94,18 @@ class AgentManager:
             jobState ENUM('success', 'error', 'expired', 'active', 'waiting') NOT NULL DEFAULT 'waiting',
             timeStamp TIMESTAMP,
             counter INT DEFAULT 0,
-            resultData BLOOB DEFAULT "",
-            information VARCHAR(255) DEFAUTLT ""
+            resultData BLOB DEFAULT NULL,
+            information VARCHAR(255) DEFAULT ""
         );
         """
-        create_table_query_task = f"""
+        create_table_query_task = """
         CREATE TABLE IF NOT EXISTS task_list (
             taskId VARCHAR(255) PRIMARY KEY,
             userId VARCHAR(255),
             AgentId VARCHAR(255),
             command VARCHAR(255),
-            output BLOB DEFAULT "",
-            error BLOB DEFAULT "",
+            output BLOB DEFAULT NULL,
+            error BLOB DEFAULT NULL,
             errorCounter INT DEFAULT 0,
             taskStatus ENUM('success', 'error', 'expired', 'active') NOT NULL DEFAULT 'active',
             hasMessageBeenSent BOOLEAN DEFAULT 0,
@@ -165,6 +165,18 @@ class AgentManager:
         query = "SELECT * FROM task_list WHERE AgentId = %s;"
         results = self.execute_query(query, (agentId,))
         return results
+    def getUserTask(self,userId):
+        query = "SELECT * FROM task_list WHERE userId = %s;"
+        results = self.execute_query(query, (userId,))
+        return results
+    def getUserSuccessTask(self,userId):
+        query = "SELECT * FROM task_list WHERE userId = %s AND taskStatus = 'success';"
+        results = self.execute_query(query, (userId,))
+        return results
+    def getUserErrorTask(self,userId):
+        query = "SELECT * FROM task_list WHERE userId = %s AND taskStatus = 'error';"
+        results = self.execute_query(query, (userId,))
+        return results
 
     def getTask(self,taskId):
         query = "SELECT * FROM task_list WHERE taskId = %s;"
@@ -178,7 +190,7 @@ class AgentManager:
             cursor.execute(query, (userId,))
             result = cursor.fetchone()
             if result:
-                return result[0]
+                return int(result[0])
             return 0
     def getErrorCounter(self, taskId):
         with self.connection.cursor() as cursor:
@@ -188,6 +200,16 @@ class AgentManager:
             if result:
                 return result[0]
             return 0
+    def incUserCounter(self, userId):
+        try:
+            with self.connection.cursor() as cursor:
+                query = "UPDATE user_reg SET counter = %s WHERE userId = %s"
+                cursor.execute(query, (self.getUserCounter(userId)+1, userId))
+                self.connection.commit() 
+                return True
+        except Exception as e:
+            print(e)
+            return False
     def agentHeartBeat(self,agentId):
         try:
             with self.connection.cursor() as cursor:
