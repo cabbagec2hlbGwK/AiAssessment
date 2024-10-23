@@ -33,7 +33,7 @@ def main():
     rds_endpoint = os.getenv("rds_endpoint")
     region_name = os.getenv("AWS_DEFAULT_REGION")
     hostEndpoint = os.getenv("APIHOST")
-    agentManager = AgentManager(secret_name, rds_endpoint, region_name, db_name="aiAssesDB2")
+    agentManager = AgentManager(secret_name, rds_endpoint, region_name, db_name="aiAssesDB3")
     endpoint = EndpointHandeler(host=hostEndpoint)
 
     #res = agentManager.createUser(name="john",email="john@gmail.com",endpoint="google.com", detailedReport=True)
