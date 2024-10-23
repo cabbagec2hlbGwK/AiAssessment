@@ -50,59 +50,52 @@
         <pre id="reportContent">The report will be displayed here...</pre>
     </div>
 
-    <!-- Div for displaying JSON template data -->
-    <div id="reportTemplateContainer" style="display:none;">
-        <h2>Report Template</h2>
-        <pre id="reportTemplateContent">Loading template data...</pre>
+    <!-- Div for displaying user data -->
+    <div id="userContainer" style="display:none;">
+        <h2>User Information</h2>
+        <pre id="userContent">User information will be displayed here...</pre>
     </div>
 
     <script>
         const form = document.querySelector('form');
-
+    
         form.addEventListener('submit', async function (event) {
             event.preventDefault();  // Prevent the default form submission
-
+    
             const formData = new FormData(form);  // Collect the form data
-
+    
             try {
                 const response = await fetch(window.location.href, {
                     method: 'POST',
                     headers: {
-                        'X-CSRFToken': formData.get('csrfmiddlewaretoken'),
+                        'X-CSRFToken': formData.get('csrfmiddlewaretoken'),  // Get CSRF token for security
                     },
                     body: formData,
                 });
-
+    
                 const result = await response.json();  // Parse the JSON response
-
+                console.log("result", result);
+    
                 // Select the report container and content elements
                 const reportContainer = document.getElementById('reportContainer');
                 const reportContent = document.getElementById('reportContent');
-                const reportTemplateContainer = document.getElementById('reportTemplateContainer');
-                const reportTemplateContent = document.getElementById('reportTemplateContent');
-
+    
                 if (result.status === 'success') {
                     // Display report content in human-readable format
                     const formattedReport = `
-                        Email: ${result.report.email}\n
-                        Website URL: ${result.report.website_url}\n
-                        Report Type: ${result.report.report_type}\n
-                        Report Content: ${result.report.report_content}\n
+                        Email: ${result.email}\n
+                        Website URL: ${result.endpoint}\n
+                        ReportData: ${result.userData}\n
+                        -----------------------------\n
                     `;
-
+    
                     // Update the report content
                     reportContent.textContent = formattedReport;
-
+    
                     // Make the report container visible
                     reportContainer.style.display = 'block';
-
-                    // Now, format and display the report template
-                    const formattedTemplate = JSON.stringify(result.report.report_template, null, 2);
-                    reportTemplateContent.textContent = formattedTemplate;
-
-                    // Make the report template container visible
-                    reportTemplateContainer.style.display = 'block';
-
+    
+    
                 } else {
                     // If failed, display an error message
                     alert('Failed to generate report: ' + result.message);
@@ -113,6 +106,7 @@
             }
         });
     </script>
+    
     
 </body>
 </html>

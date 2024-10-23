@@ -34,12 +34,9 @@ ALLOWED_HOSTS = []
 # SECRET_NAME = os.getenv('SECRET_NAME')  
 # RDS_ENDPOINT = os.getenv('RDS_ENDPOINT')  
 
-# Create an instance of AgentManager
+
 # agent_manager = AgentManager(secret_name=SECRET_NAME, rds_endpoint=RDS_ENDPOINT, region_name=AWS_DEFAULT_REGION)
 
-
-
-# Application definition
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -85,10 +82,7 @@ WSGI_APPLICATION = 'aiAssessment.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 
-# Set up the DATABASES configuration
-# DATABASES = {
-#     'default': agent_manager.get_django_database_settings()
-# }
+
 
 DATABASES = {
     'default': {

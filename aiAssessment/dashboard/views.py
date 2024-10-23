@@ -1,52 +1,46 @@
 from django.http import JsonResponse
 from django.shortcuts import render
+from django.db import connection
+from dashboard.agent_manager import AgentManager
 from .forms import ReportForm
-from .models import Report
 
+
+# The main view that handles the dashboard logic
 def dashboard_view(request):
     form = ReportForm()
 
     if request.method == 'POST':
         form = ReportForm(request.POST)
 
-        if form.is_valid():
-            # Extract form data
-            email = form.cleaned_data['email']
-            website_url = form.cleaned_data['website_url']
-            report_type = form.cleaned_data['report_type']
-            
-            # Create a report instance
-            report_content = f"Generating {report_type} report for {email} and {website_url}."
-            report = Report.objects.create(
-                email=email,
-                website_url=website_url,
-                report_type=report_type,
-                report_content=report_content
-            )
-            report_data = {
-                'id': report.id,
-                'email': report.email,
-                'website_url': report.website_url,
-                'report_type': report.report_type,
-                'report_content': report.report_content,
-            }
+        agent_manager = AgentManager(use_local=True)
 
-            # Ensure the data is serializable
-            response_data = {
-                'status': 'success',
-                'report': report_data  
-            }
+        if form.is_valid():
+            name = form.cleaned_data.get('username')
+            email = form.cleaned_data['email']
+            endpoint = form.cleaned_data['website_url']
+            detailed_report = 1 if form.cleaned_data['report_type'] == 'detailed' else 0
+            name = form.cleaned_data.get('username')  
+
+            # Create a user based on the form input using raw SQL
+            user_id =  agent_manager.insert_user(name=name, email=email, endpoint=endpoint, detailed_report=detailed_report)
+
+            if user_id:
+                print(f"Fetching user data for user_id: {user_id}")  # Debug log
+                user_data = agent_manager.fetch_user(user_id)
+                if user_data is not None:
+                    response_data = {
+                        'status': 'success',
+                        'username': name,
+                        'email': email,
+                        'endpoint': endpoint,
+                        'userData': user_data,  # This now includes parsed JSON
+                    }
+                else:
+                    response_data = {
+                        'status': 'error',
+                        'message': "Failed to fetch user data."
+                    }
 
             return JsonResponse(response_data)
 
-        else:
-            # If form is invalid, return the errors
-            errors = form.errors.as_json()
-            return JsonResponse({
-                'status': 'error',
-                'message': 'Form validation failed',
-                'errors': json.loads(errors),  
-            })
-
-    # Render the form for GET requests
     return render(request, 'dashboard/dashboard.html', {'form': form})
