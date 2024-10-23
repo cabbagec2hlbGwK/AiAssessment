@@ -84,7 +84,7 @@ class AgentManager:
                 raise e
 
     def create_table(self):
-        create_table_query_user= f"""
+        create_table_query_user = """
         CREATE TABLE IF NOT EXISTS user_reg (
             userId VARCHAR(255) PRIMARY KEY,
             name VARCHAR(255),
@@ -94,11 +94,11 @@ class AgentManager:
             jobState ENUM('success', 'error', 'expired', 'active', 'waiting') NOT NULL DEFAULT 'waiting',
             timeStamp TIMESTAMP,
             counter INT DEFAULT 0,
-            resultData BLOOB DEFAULT NULL,
-            information VARCHAR(255) DEFAUTLT ""
+            resultData BLOB DEFAULT NULL,
+            information VARCHAR(255) DEFAULT ""
         );
         """
-        create_table_query_task = f"""
+        create_table_query_task = """
         CREATE TABLE IF NOT EXISTS task_list (
             taskId VARCHAR(255) PRIMARY KEY,
             userId VARCHAR(255),
