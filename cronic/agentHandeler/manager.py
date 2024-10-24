@@ -5,6 +5,7 @@ import uuid
 import random
 import time
 import base64
+import multiprocessing
 from cronic.agentHandeler.utils import endpointHandeler
 from cronic.agentHandeler.utils.taskHandeler import AgentManager
 from cronic.agentHandeler.utils.endpointHandeler import EndpointHandeler
@@ -33,8 +34,7 @@ def handelNewRequest(agentManager, endpointManager):
     while running:
         time.sleep(3)
         newUsers = agentManager.getWaitingUser()
-        print(newUsers)
-        input("waiting for res")
+        print(f"New users : {newUsers}")
         if len(newUsers) <= 0:
             continue
         for user in newUsers:
@@ -64,9 +64,9 @@ def taskRotator(agentManager, endpointManager):
         activeUsers = agentManager.getActiveUser()
         for user in activeUsers:
             userId = user[0]
-            agentManager.getUserTaskOutputs(userId)
+            #agentManager.getUserTaskOutputs(userId)
             session = agentManager.isSessionCompleted(userId)
-            print(session)
+            print(f"User : {userId} sessionStatus: {session}")
 
 
 
@@ -80,8 +80,17 @@ def main():
     #deployTask(agentManager=agentManager, endpoint=endpoint, userId="347939e5-58d7-4f8c-bcdc-55995e1c2d62", targer="http://localhost:8000")
     #taskWatcher(agentManager)
     taskRotator(agentManager, endpoint)
+    agentNewRequestProcess = multiprocessing.Process(target=handelNewRequest, args=(agentManager, endpoint))
+    agentTaskRotProcess = multiprocessing.Process(target=taskRotator, args=(agentManager, endpoint))
+    agentWatcherProcess = multiprocessing.Process(target=taskWatcher, args=(agentManager,))
 
+    agentNewRequestProcess.start()
+    agentTaskRotProcess.start()
+    agentWatcherProcess.start()
     #res = agentManager.createUser(name="john",email="john@gmail.com",endpoint="google.com", detailedReport=True)
+    agentNewRequestProcess.join()
+    agentTaskRotProcess.join()
+    agentWatcherProcess.join()
     
 
 
