@@ -177,6 +177,10 @@ class AgentManager:
         query = "SELECT taskId FROM task_list WHERE userId = %s AND taskStatus = 'error';"
         results = self.execute_query(query, (userId,))
         return results
+    def getTaskUpTime(self, taskId):
+        startTime = self.getTaskTimeStamp(taskId)
+        diffrence = datetime.now() - startTime 
+        return diffrence.total_seconds() / 60
     def getUserTaskOutputs(self, userId):
         success = self.getUserSuccessTask(userId)
         error = self.getUserErrorTask(userId)
@@ -185,7 +189,7 @@ class AgentManager:
         for task in total:
             taskId = task[0]
             print(self.getTaskCommand(taskId))
-            print(self.getTaskTimeStamp(taskId))
+            print(self.getTaskUpTime(taskId))
         for task in success:
             taskId = task[0]
             #print(self.getTaskOutput(taskId))
