@@ -180,7 +180,11 @@ class AgentManager:
     def getUserTaskOutputs(self, userId):
         success = self.getUserSuccessTask(userId)
         error = self.getUserErrorTask(userId)
-        print(len(success),len(error),len(self.getUserTask(userId)))
+        total = self.getUserTask(userId)
+        print(len(success),len(error),len(total))
+        for task in total:
+            taskId = task[0]
+            print(self.getTaskCommand(taskId))
         for task in success:
             taskId = task[0]
             #print(self.getTaskOutput(taskId))
@@ -194,6 +198,14 @@ class AgentManager:
         query = "SELECT * FROM task_list WHERE taskId = %s;"
         results = self.execute_query(query, (taskId,))
         return results
+    def getTaskCommand(self, taskId):
+        with self.connection.cursor() as cursor:
+            query = "SELECT command FROM task_list WHERE taskId = %s;"
+            cursor.execute(query, (taskId,))
+            result = cursor.fetchone()
+            if result:
+                return result[0]
+            return 0
 
     def getTaskOutput(self, taskId):
         with self.connection.cursor() as cursor:
