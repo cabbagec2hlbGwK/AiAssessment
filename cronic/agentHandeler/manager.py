@@ -9,8 +9,8 @@ from cronic.agentHandeler.utils.taskHandeler import AgentManager
 from cronic.agentHandeler.utils.endpointHandeler import EndpointHandeler
 from cronic.agentHandeler.tasks.tasks import taskRun
 from cronic.agentHandeler.utils import taskHandeler
-from utils.taskHandeler import AgentManager as agent
-from utils.endpointHandeler import EndpointHandeler as endpointH
+#from utils.taskHandeler import AgentManager as agent
+#from utils.endpointHandeler import EndpointHandeler as endpointH
 TIMEOUT = 0.6
 
 def deployTask(endpoint:EndpointHandeler, agentManager:AgentManager, targer, userId):
@@ -26,7 +26,7 @@ def deployTask(endpoint:EndpointHandeler, agentManager:AgentManager, targer, use
             taskRun.delay(agentId=agentId, tasks=tasks, packages=[], userId=userId)
             tasks = dict()
 
-def handelNewRequest(agentManager:agent, endpointManager:endpointH):
+def handelNewRequest(agentManager, endpointManager):
     running = True
     while running:
         newUsers = agentManager.getWaitingUser()
