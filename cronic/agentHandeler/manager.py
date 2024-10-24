@@ -51,7 +51,7 @@ def taskWatcher(agentManager, endpoint):
         activeUsers = agentManager.getActiveUser()
         for user in activeUsers:
             userId = user[0]
-            for task in agentManager.getUserActiveTask(userId):
+            for task in agentManager.getActiveTask(userId):
                 taskId = task[0]
                 if agentManager.getTaskUptime(taskId) >= 40:
                     agentManager.setTaskTimeout(taskId)
