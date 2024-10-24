@@ -186,16 +186,19 @@ class AgentManager:
         error = self.getUserErrorTask(userId)
         total = self.getUserTask(userId)
         print(len(success),len(error),len(total))
+        data = ""
         for task in total:
             taskId = task[0]
             print(self.getTaskCommand(taskId))
             print(self.getTaskUpTime(taskId))
         for task in success:
             taskId = task[0]
-            #print(self.getTaskOutput(taskId))
+            data +=f"## Command: {self.getTaskCommand(taskId)} \n {self.getTaskOutput(taskId)} \n---"
         for task in error:
             taskId = task[0]
-            #print(self.getTaskError(taskId))
+            data +=f"## Command: {self.getTaskCommand(taskId)} \n {self.getTaskError(taskId)} \n---"
+        print(data)
+        return data
 
 
 
@@ -341,6 +344,16 @@ class AgentManager:
             with self.connection.cursor() as cursor:
                 query = "UPDATE task_list SET error = %s, taskStatus = 'error' WHERE taskId = %s"
                 cursor.execute(query, (str(error), taskId))
+                self.connection.commit() 
+                return True
+        except Exception as e:
+            print(e)
+            return False
+    def setTaskTimeout(self, taskId):
+        try:
+            with self.connection.cursor() as cursor:
+                query = "UPDATE task_list SET error = 'TIMEOUT TASK', taskStatus = 'error' WHERE taskId = %s"
+                cursor.execute(query, (taskId,))
                 self.connection.commit() 
                 return True
         except Exception as e:

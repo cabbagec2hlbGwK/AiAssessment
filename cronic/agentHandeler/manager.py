@@ -44,6 +44,8 @@ def handelNewRequest(agentManager, endpointManager):
             deployTask(agentManager=agentManager, endpoint=endpointManager, userId=userId, targer=target)
 
 
+def taskWatcher(agentManager, endpoint):
+    pass
 def taskRotator(agentManager, endpointManager):
     running = True
     while running:
