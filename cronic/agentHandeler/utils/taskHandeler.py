@@ -349,7 +349,7 @@ class AgentManager:
         try:
             with self.connection.cursor() as cursor:
                 query = "UPDATE user_reg SET information = %s WHERE userId = %s"
-                cursor.execute(query, (self.getUserInfo(userId)+data, userId))
+                cursor.execute(query, (str(self.getUserInfo(userId))+str(data), userId))
                 self.connection.commit() 
                 return True
         except Exception as e:
