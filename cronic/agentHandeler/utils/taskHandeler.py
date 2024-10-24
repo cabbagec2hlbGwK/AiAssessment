@@ -186,7 +186,7 @@ class AgentManager:
         data = ""
         for task in success:
             taskId = task[0]
-            data +=f"## Command: {self.getTaskCommand(taskId)} \n {self.getTaskOutput(taskId)} \n---\n"
+            data +=f"## Command: {self.getTaskCommand(taskId)} \n output: {self.getTaskOutput(taskId)} Error: {self.getTaskError}\n---\n"
         return data
     def getUserSuccessTaskOutputs(self, userId):
         success = self.getUserSuccessTask(userId)
