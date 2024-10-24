@@ -188,6 +188,13 @@ class AgentManager:
             taskId = task[0]
             data +=f"## Command: {self.getTaskCommand(taskId)} \n {self.getTaskOutput(taskId)} \n---\n"
         return data
+    def getUserSuccessTaskOutputs(self, userId):
+        success = self.getUserSuccessTask(userId)
+        data = ""
+        for task in success:
+            taskId = task[0]
+            data +=f"## Command: {self.getTaskCommand(taskId)} \n {self.getTaskOutput(taskId)} \n---\n"
+        return data
 
 
 
@@ -274,6 +281,14 @@ class AgentManager:
             if result:
                 return result[0]
             return 0
+    def getUserInfo(self, userId):
+        with self.connection.cursor() as cursor:
+            query = "SELECT information FROM user_reg WHERE userId = %s;"
+            cursor.execute(query, (userId,))
+            result = cursor.fetchone()
+            if result:
+                return str(result[0])
+            return 0
     def getUserCounter(self, userId):
         with self.connection.cursor() as cursor:
             query = "SELECT counter FROM user_reg WHERE userId = %s;"
@@ -305,6 +320,36 @@ class AgentManager:
             with self.connection.cursor() as cursor:
                 query = "UPDATE user_reg SET jobState = 'active' WHERE userId = %s"
                 cursor.execute(query, (userId))
+                self.connection.commit() 
+                return True
+        except Exception as e:
+            print(e)
+            return False
+    def setUserJobSuccess(self, userId):
+        try:
+            with self.connection.cursor() as cursor:
+                query = "UPDATE user_reg SET jobState = 'success' WHERE userId = %s"
+                cursor.execute(query, (userId))
+                self.connection.commit() 
+                return True
+        except Exception as e:
+            print(e)
+            return False
+    def setUserReport(self, userId, report):
+        try:
+            with self.connection.cursor() as cursor:
+                query = "UPDATE user_reg SET resultData = %s WHERE userId = %s"
+                cursor.execute(query, (report, userId,))
+                self.connection.commit() 
+                return True
+        except Exception as e:
+            print(e)
+            return False
+    def appendUserInformation(self, userId, data):
+        try:
+            with self.connection.cursor() as cursor:
+                query = "UPDATE user_reg SET information = %s WHERE userId = %s"
+                cursor.execute(query, (self.getUserInfo(userId)+data, userId))
                 self.connection.commit() 
                 return True
         except Exception as e:

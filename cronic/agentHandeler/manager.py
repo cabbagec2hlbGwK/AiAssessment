@@ -59,13 +59,21 @@ def taskWatcher(agentManager):
                     agentManager.setTaskTimeout(taskId)
     
 def processData(agentManager, endpointManager, userId):
+    if agentManager.getUserCounter(userId) >= 3:
+        data = agentManager.getUserSuccessTaskOutput(userId)
+        information = agentManager.gerUserInfo(userId)
+        res = endpointManager.getReport(f"# Key information: \n {information} \n# Additionnal information \n {data}")
+        print(res)
+        status = agentManager.setUserReport(userId, json.dumps(res))
+        print(f"the report was {status}")
+        print(f"User: {userId} is successfull completed {agentManager.setUserJobSuccess(userId)}")
+        return
     data = agentManager.getUserTaskOutputs(userId)
     res = endpointManager.extInformation(str(data))
     print(f"The results is {res}")
     task = dict()
+    print(f"Included additional innformation {agentManager.appendUserInformation(userId,res.get('information'))}")
     for command in res.get('next_steps'):
-        print("------------------------")
-        print(command)
         taskId = agentManager.createTask(userId=userId, agentId="Null-12",command=str(command))
         task[taskId]={"command":[command]}
         taskRun.delay(agentId="Null-12", tasks=task, packages=[], userId=userId)
