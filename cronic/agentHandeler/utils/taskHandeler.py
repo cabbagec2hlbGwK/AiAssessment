@@ -180,13 +180,36 @@ class AgentManager:
     def getUserTaskOutputs(self, userId):
         success = self.getUserSuccessTask(userId)
         error = self.getUserErrorTask(userId)
-        print(success, error)
+        for task in success:
+            taskId = task[0]
+            print(self.getTaskOutput(taskId))
+        for task in error:
+            taskId = task[0]
+            print(self.getTaskError(taskId))
+
 
 
     def getTask(self,taskId):
         query = "SELECT * FROM task_list WHERE taskId = %s;"
         results = self.execute_query(query, (taskId,))
         return results
+
+    def getTaskOutput(self, taskId):
+        with self.connection.cursor() as cursor:
+            query = "SELECT output FROM task_list WHERE taskId = %s;"
+            cursor.execute(query, (taskId,))
+            result = cursor.fetchone()
+            if result:
+                return result[0]
+            return 0
+    def getTaskError(self, taskId):
+        with self.connection.cursor() as cursor:
+            query = "SELECT error FROM task_list WHERE taskId = %s;"
+            cursor.execute(query, (taskId,))
+            result = cursor.fetchone()
+            if result:
+                return result[0]
+            return 0
     def getCompletedTask(self, userId):
         query = "SELECT taskId FROM task_list WHERE userId = %s AND taskStatus IN ('success', 'error') AND hasMessageBeenSent = FALSE;"
         results = self.execute_query(query, (userId,))
