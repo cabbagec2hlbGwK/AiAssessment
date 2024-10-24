@@ -26,11 +26,13 @@
             <p class="mt-4 text-gray-600">{{ executive_summary.description }}</p>
             <p class="mt-4 text-gray-600"><strong>Testing Date:</strong> {{ executive_summary.testing_date }}</p>
             
+            <!-- Severity Pie Chart -->
             <div class="flex justify-center mt-6">
                 <canvas id="issuesChart" width="400" height="400"></canvas>
             </div>
         </div>
         
+        <!-- Findings & Analysis -->
         <div class="bg-white p-6 shadow-md rounded-lg mb-8">
             <h2 class="text-2xl font-semibold text-gray-700">Findings & Analysis</h2>
             {% for finding in findings_and_analysis.detailed_findings %}
@@ -49,6 +51,7 @@
             {% endfor %}
         </div>
 
+        <!-- Risk Assessment -->
         <div class="bg-white p-6 shadow-md rounded-lg mb-8">
             <h2 class="text-2xl font-semibold text-gray-700">Risk Assessment</h2>
             <ul class="mt-4">
@@ -61,6 +64,7 @@
             </ul>
         </div>
 
+        <!-- Recommendations -->
         <div class="bg-white p-6 shadow-md rounded-lg mb-8">
             <h2 class="text-2xl font-semibold text-gray-700">Recommendations</h2>
             <ul class="list-disc ml-6 mt-4 text-gray-600">
@@ -72,6 +76,7 @@
 
     </div>
 
+    <!-- Pie Chart for Severity Summary -->
     <script>
         var ctx = document.getElementById('issuesChart').getContext('2d');
         var issuesChart = new Chart(ctx, {

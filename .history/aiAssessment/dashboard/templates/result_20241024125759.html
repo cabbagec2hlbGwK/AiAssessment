@@ -49,6 +49,7 @@
             {% endfor %}
         </div>
 
+        <!-- Risk Assessment -->
         <div class="bg-white p-6 shadow-md rounded-lg mb-8">
             <h2 class="text-2xl font-semibold text-gray-700">Risk Assessment</h2>
             <ul class="mt-4">
@@ -61,6 +62,7 @@
             </ul>
         </div>
 
+        <!-- Recommendations -->
         <div class="bg-white p-6 shadow-md rounded-lg mb-8">
             <h2 class="text-2xl font-semibold text-gray-700">Recommendations</h2>
             <ul class="list-disc ml-6 mt-4 text-gray-600">
@@ -72,6 +74,7 @@
 
     </div>
 
+    <!-- Pie Chart for Severity Summary -->
     <script>
         var ctx = document.getElementById('issuesChart').getContext('2d');
         var issuesChart = new Chart(ctx, {
