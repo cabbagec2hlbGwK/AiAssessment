@@ -62,6 +62,8 @@ def processData(agentManager, endpointManager, userId):
     data = agentManager.getUserTaskOutputs(userId)
     res = endpointManager.extInformation(str(data))
     print(f"The results is {res}")
+    for command in res.get('next_steps'):
+        print(command)
 
 def taskRotator(agentManager, endpointManager):
     running = True
