@@ -58,6 +58,11 @@ def taskWatcher(agentManager):
                     print(f"Task {taskId} is timeout")
                     agentManager.setTaskTimeout(taskId)
     
+def processData(agentManager, endpointManager, userId):
+    data = agentManager.getUserTaskOutputs(userId)
+    res = endpointManager.extInformation(str(data))
+    print(f"The results is {res}")
+
 def taskRotator(agentManager, endpointManager):
     running = True
     print("Task Rotator us running")
@@ -65,11 +70,16 @@ def taskRotator(agentManager, endpointManager):
         time.sleep(10)
         activeUsers= agentManager.getActiveUser()
         for user in activeUsers:
+            print("-"*80)
             userId = user[0]
             agentManager.userTaskStatus(userId)
             #agentManager.getUserTaskOutputs(userId)
             session = agentManager.isSessionCompleted(userId)
             print(f"User : {userId} sessionStatus: {session}")
+            if session=="none":
+                pass
+            if session:
+                processData(agentManager, endpointManager, userId)
 
 
 
