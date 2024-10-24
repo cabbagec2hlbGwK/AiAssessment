@@ -62,7 +62,7 @@ def main():
     hostEndpoint = os.getenv("APIHOST")
     agentManager = AgentManager(secret_name, rds_endpoint, region_name, db_name="aiAssesDB3")
     endpoint = EndpointHandeler(host=hostEndpoint)
-    handelNewRequest(agentManager, endpoint)
+    taskRotator(agentManager, endpoint)
 
     #res = agentManager.createUser(name="john",email="john@gmail.com",endpoint="google.com", detailedReport=True)
     
