@@ -91,9 +91,6 @@ def main():
     agentTaskRotProcess.start()
     agentWatcherProcess.start()
     #res = agentManager.createUser(name="john",email="john@gmail.com",endpoint="google.com", detailedReport=True)
-    agentNewRequestProcess.join()
-    agentTaskRotProcess.join()
-    agentWatcherProcess.join()
     
 
 
