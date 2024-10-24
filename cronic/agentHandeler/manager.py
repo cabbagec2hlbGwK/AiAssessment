@@ -20,7 +20,6 @@ def deployTask(endpoint:EndpointHandeler, agentManager:AgentManager, targer, use
     rawCommands = endpoint.getCommand(targer)
     tasks = dict()
     agentManager.incUserCounter(userId)
-    input("it was successs")
     for commands in rawCommands:
         for command in commands.get("commands",[]):
             taskId = agentManager.createTask(userId=userId, agentId=agentId,command=str(command))
