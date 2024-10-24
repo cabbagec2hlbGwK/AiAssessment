@@ -185,6 +185,7 @@ class AgentManager:
         for task in total:
             taskId = task[0]
             print(self.getTaskCommand(taskId))
+            print(self.getTaskTimeStamp(taskId))
         for task in success:
             taskId = task[0]
             #print(self.getTaskOutput(taskId))
@@ -218,6 +219,14 @@ class AgentManager:
     def getTaskError(self, taskId):
         with self.connection.cursor() as cursor:
             query = "SELECT error FROM task_list WHERE taskId = %s;"
+            cursor.execute(query, (taskId,))
+            result = cursor.fetchone()
+            if result:
+                return result[0]
+            return 0
+    def getTaskTimeStamp(self, taskId):
+        with self.connection.cursor() as cursor:
+            query = "SELECT updateTimeStamp FROM task_list WHERE taskId = %s;"
             cursor.execute(query, (taskId,))
             result = cursor.fetchone()
             if result:
