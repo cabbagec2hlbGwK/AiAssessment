@@ -31,6 +31,7 @@ def deployTask(endpoint:EndpointHandeler, agentManager:AgentManager, targer, use
 
 def handelNewRequest(agentManager, endpointManager):
     running = True
+    print("New user watcher is running")
     while running:
         time.sleep(3)
         newUsers = agentManager.getWaitingUser()
@@ -46,6 +47,7 @@ def handelNewRequest(agentManager, endpointManager):
 
 def taskWatcher(agentManager):
     running = True
+    print("Task Watcher is running")
     while running:
         time.sleep(4)
         activeUsers = agentManager.getActiveUser()
@@ -59,6 +61,7 @@ def taskWatcher(agentManager):
     
 def taskRotator(agentManager, endpointManager):
     running = True
+    print("Task Rotator us running")
     while running:
         time.sleep(4)
         activeUsers = agentManager.getActiveUser()
