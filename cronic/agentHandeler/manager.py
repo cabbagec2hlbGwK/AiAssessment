@@ -62,7 +62,7 @@ def main():
     hostEndpoint = os.getenv("APIHOST")
     agentManager = AgentManager(secret_name, rds_endpoint, region_name, db_name="aiAssesDB4")
     endpoint = EndpointHandeler(host=hostEndpoint)
-    deployTask(agentManager=agentManager, endpoint=endpoint, userId="347939e5-58d7-4f8c-bcdc-55995e1c2d62", targer="http://localhost:8000")
+    #deployTask(agentManager=agentManager, endpoint=endpoint, userId="347939e5-58d7-4f8c-bcdc-55995e1c2d62", targer="http://localhost:8000")
     taskRotator(agentManager, endpoint)
 
     #res = agentManager.createUser(name="john",email="john@gmail.com",endpoint="google.com", detailedReport=True)
