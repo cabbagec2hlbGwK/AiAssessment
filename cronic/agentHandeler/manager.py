@@ -89,6 +89,7 @@ def taskRotator(agentManager, endpointManager):
     while running:
         time.sleep(10)
         activeUsers= agentManager.getActiveUser()
+        print(activeUsers)
         for user in activeUsers:
             print("-"*80)
             userId = user[0]
