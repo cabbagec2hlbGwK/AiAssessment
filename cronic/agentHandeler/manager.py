@@ -47,11 +47,11 @@ def handelNewRequest(agentManager, endpointManager):
 def taskRotator(agentManager, endpointManager):
     running = True
     while running:
+        time.sleep(4)
         activeUsers = agentManager.getActiveUser()
         for user in activeUsers:
             userId = user[0]
             agentManager.getUserTaskOutputs(userId)
-    pass
 
 
 
@@ -60,14 +60,14 @@ def main():
     rds_endpoint = os.getenv("rds_endpoint")
     region_name = os.getenv("AWS_DEFAULT_REGION")
     hostEndpoint = os.getenv("APIHOST")
-    agentManager = AgentManager(secret_name, rds_endpoint, region_name, db_name="aiAssesDB3")
+    agentManager = AgentManager(secret_name, rds_endpoint, region_name, db_name="aiAssesDB4")
     endpoint = EndpointHandeler(host=hostEndpoint)
+    deployTask(agentManager=agentManager, endpoint=endpoint, userId="cf7b0caa-8dfd-45b9-beb2-d42101c0bff6", targer="http://localhost:8000")
     taskRotator(agentManager, endpoint)
 
     #res = agentManager.createUser(name="john",email="john@gmail.com",endpoint="google.com", detailedReport=True)
     
 
-    #deployTask(agentManager=agentManager, endpoint=endpoint, userId="baed8d83-1660-481b-98dd-620dc15ee37c", targer="http://localhost:8000")
 
 
     
