@@ -53,7 +53,8 @@ def taskWatcher(agentManager, endpoint):
             userId = user[0]
             for task in agentManager.getActiveTask(userId):
                 taskId = task[0]
-                if agentManager.getTaskUptime(taskId) >= 40:
+                if agentManager.getTaskUpTime(taskId) >= 40:
+                    print(f"Task {taskId} is timeout")
                     agentManager.setTaskTimeout(taskId)
     
 def taskRotator(agentManager, endpointManager):
