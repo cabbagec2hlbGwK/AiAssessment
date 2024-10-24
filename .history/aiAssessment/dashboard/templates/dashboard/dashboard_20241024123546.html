@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100 flex flex-col min-h-screen">
+
+    <!-- Header Section -->
+    <header class="bg-green-600 text-white py-6">
+        <div class="container mx-auto text-center">
+            <h1 class="text-3xl font-bold">Vulnerability Assessment Report</h1>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container mx-auto my-8 flex-grow">
+        
+        <!-- Form Section -->
+        <section class="bg-white p-8 shadow-md rounded-md">
+            <h2 class="text-xl font-semibold text-gray-700 mb-4">Generate Report</h2>
+            <form method="post" class="space-y-6">
+                {% csrf_token %}
+                <div class="space-y-4">
+                    <!-- Text fields styling with Tailwind CSS -->
+                    {{ form.as_p }}
+                </div>
+                <button type="submit" class="bg-green-600 hover:bg-green-700 text-white py-2 px-4 rounded-md shadow">
+                    Generate Report
+                </button>
+            </form>
+        </section>
+
+        <!-- Report Section (Initially hidden) -->
+        <section id="reportContainer" class="hidden bg-white mt-8 p-6 shadow-md rounded-md">
+            <h2 class="text-xl font-semibold text-gray-700">Generated Report</h2>
+            <pre id="reportContent" class="json-data text-gray-800 bg-gray-100 p-4 rounded mt-4">The report will be displayed here...</pre>
+        </section>
+
+        <!-- User Info Section (Initially hidden) -->
+        <section id="userContainer" class="hidden bg-white mt-8 p-6 shadow-md rounded-md">
+            <h2 class="text-xl font-semibold text-gray-700">User Information</h2>
+            <pre id="userContent" class="json-data text-gray-800 bg-gray-100 p-4 rounded mt-4">User information will be displayed here...</pre>
+        </section>
+    </main>
+
+    <!-- Footer (sticky to bottom) -->
+    <footer class="bg-gray-800 text-white py-4 text-center mt-auto">
+        <p>&copy; 2024 Vulnerability Assessment. All rights reserved.</p>
+    </footer>
+
+    <script>
+        const form = document.querySelector('form');
+
+        form.addEventListener('submit', async function (event) {
+            event.preventDefault();  
+            const formData = new FormData(form); 
+    
+            try {
+                const response = await fetch(window.location.href, {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRFToken': formData.get('csrfmiddlewaretoken'),
+                    },
+                    body: formData,
+                });
+    
+                const result = await response.json();  // Parse the JSON response
+                console.log("result", result);
+    
+                if (result.status === 'success') {
+                    // Redirect to the report page with query parameters
+                    const reportUrl = new URL('/report/', window.location.origin);
+                    reportUrl.searchParams.append('email', result.email);
+                    reportUrl.searchParams.append('endpoint', result.endpoint);
+                    reportUrl.searchParams.append('userData', result.userData);
+    
+                    window.location.href = reportUrl; 
+                } else {
+                    // If failed, display an error message
+                    alert('Failed to generate report: ' + result.message);
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Failed to generate report due to server error');
+            }
+        });
+    </script>
+</body>
+</html>

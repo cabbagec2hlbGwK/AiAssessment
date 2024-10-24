@@ -15,6 +15,7 @@
         .custom-bg {
             background-color: #134e4a;
         }
+        /* Full-screen loading spinner */
         #page-loader {
             position: fixed;
             top: 0;
@@ -44,6 +45,7 @@
 </head>
 <body class="bg-gray-100 flex flex-col min-h-screen" onload="hidePageLoader()">
 
+    <!-- Full-screen page loading spinner -->
     <div id="page-loader">
         <div class="spinner"></div>
     </div>
@@ -115,10 +117,12 @@
     </footer>
 
     <script>
+        // Page loader functionality
         function hidePageLoader() {
             document.getElementById("page-loader").style.visibility = "hidden";
         }
 
+        // Form submission handler
         const form = document.getElementById("reportForm");
         const submitBtn = document.getElementById("submitBtn");
         const btnText = document.getElementById("btnText");
@@ -127,11 +131,9 @@
         const errorMessage = document.getElementById("errorMessage");
 
         form.addEventListener("submit", async function (event) {
-            event.preventDefault();
+            event.preventDefault(); // Prevent default form submission
 
-            // Hide previous errors
-            errorAlert.classList.add("hidden");
-
+            // Show button spinner and disable form
             btnText.textContent = "Generating...";
             btnSpinner.classList.remove("hidden");
             submitBtn.disabled = true;
@@ -146,30 +148,21 @@
                     body: formData,
                 });
 
-                // Check if the response is OK (status 200-299)
-                if (!response.ok) {
-                    throw new Error(`HTTP error! Status: ${response.status} - ${response.statusText}`);
-                }
-
                 const result = await response.json();
 
-                // Handle Django-specific error messages
-                if (result.status === 'error') {
-                    throw new Error(result.message || "Unknown server error occurred.");
-                }
-
-                // Handle success
                 if (result.status === 'success') {
+                    // Handle success
                     document.getElementById('reportContainer').classList.remove('hidden');
                     document.getElementById('reportContent').textContent = JSON.stringify(result.report, null, 2);
+                } else {
+                    throw new Error(result.message);
                 }
 
             } catch (error) {
-                // Show error message
                 errorMessage.textContent = "Failed to generate report: " + error.message;
                 errorAlert.classList.remove("hidden");
             } finally {
-                // Reset button state
+                // Hide button spinner and re-enable form
                 btnText.textContent = "Generate Report";
                 btnSpinner.classList.add("hidden");
                 submitBtn.disabled = false;
