@@ -24,10 +24,12 @@ class EndpointHandeler:
         return None
 
     def extInformation(self, data):
-        res = requests.post(url=f"{self.host}/{self.ei}", json={"body":str(data)})
-        if res.json():
-            return res.json()[0]
-        return res.json()
+        res = ""
+        for i in range(4):
+            res = requests.post(url=f"{self.host}/{self.ei}", json={"body":str(data)})
+            if len(res.json())!=0:
+                return res.json()[0]
+        return res
         
 
 
