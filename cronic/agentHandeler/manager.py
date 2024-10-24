@@ -3,6 +3,7 @@ import os
 import datetime
 import uuid
 import random
+import time
 import base64
 from cronic.agentHandeler.utils import endpointHandeler
 from cronic.agentHandeler.utils.taskHandeler import AgentManager
@@ -30,6 +31,7 @@ def deployTask(endpoint:EndpointHandeler, agentManager:AgentManager, targer, use
 def handelNewRequest(agentManager, endpointManager):
     running = True
     while running:
+        time.sleep(3)
         newUsers = agentManager.getWaitingUser()
         print(newUsers)
         input("waiting for res")
@@ -42,7 +44,14 @@ def handelNewRequest(agentManager, endpointManager):
             deployTask(agentManager=agentManager, endpoint=endpointManager, userId=userId, targer=target)
 
 
-
+def taskRotator(agentManager, endpointManager):
+    running = True
+    while running:
+        activeUsers = agentManager.getActiveUser()
+        for user in activeUsers:
+            userId = user[0]
+            agentManager.getUserTaskOutputs(userId)
+    pass
 
 
 

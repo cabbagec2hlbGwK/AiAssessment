@@ -166,17 +166,23 @@ class AgentManager:
         results = self.execute_query(query, (agentId,))
         return results
     def getUserTask(self,userId):
-        query = "SELECT * FROM task_list WHERE userId = %s;"
+        query = "SELECT taskId FROM task_list WHERE userId = %s;"
         results = self.execute_query(query, (userId,))
         return results
     def getUserSuccessTask(self,userId):
-        query = "SELECT * FROM task_list WHERE userId = %s AND taskStatus = 'success';"
+        query = "SELECT taskId FROM task_list WHERE userId = %s AND taskStatus = 'success';"
         results = self.execute_query(query, (userId,))
         return results
     def getUserErrorTask(self,userId):
-        query = "SELECT * FROM task_list WHERE userId = %s AND taskStatus = 'error';"
+        query = "SELECT taskId FROM task_list WHERE userId = %s AND taskStatus = 'error';"
         results = self.execute_query(query, (userId,))
         return results
+    def getUserTaskOutputs(self, userId):
+        success = self.getUserSuccessTask(userId)
+        error = self.getUserErrorTask(userId)
+        print(success, error)
+        input("waiting")
+
 
     def getTask(self,taskId):
         query = "SELECT * FROM task_list WHERE taskId = %s;"
@@ -202,12 +208,16 @@ class AgentManager:
         else:
             return True
 
-    def getUser(self):
-        query = "SELECT * FROM user_reg;"
-        results = self.execute_query(query)
+    def getUser(self, userId):
+        query = "SELECT * FROM user_reg WHERE userId = %s;"
+        results = self.execute_query(query, (userId,))
         return results
     def getWaitingUser(self):
         query = "SELECT userId FROM user_reg WHERE jobState = 'waiting';"
+        results = self.execute_query(query)
+        return results
+    def getActiveUser(self):
+        query = "SELECT userId FROM user_reg WHERE jobState = 'active';"
         results = self.execute_query(query)
         return results
     def getUserTarger(self, userId):
