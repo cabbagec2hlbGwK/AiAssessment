@@ -25,6 +25,7 @@ def deployTask(endpoint:EndpointHandeler, agentManager:AgentManager, targer, use
             tasks[taskId]={"command":[command]}
             taskRun.delay(agentId=agentId, tasks=tasks, packages=[], userId=userId)
             tasks = dict()
+    agentManager.setUserActive(userId)
 
 def handelNewRequest(agentManager, endpointManager):
     running = True
