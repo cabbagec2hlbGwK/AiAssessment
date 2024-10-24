@@ -193,10 +193,10 @@ class AgentManager:
             print(self.getTaskUpTime(taskId))
         for task in success:
             taskId = task[0]
-            data +=f"## Command: {self.getTaskCommand(taskId)} \n {self.getTaskOutput(taskId)} \n---"
+            data +=f"## Command: {self.getTaskCommand(taskId)} \n {self.getTaskOutput(taskId)} \n---\n"
         for task in error:
             taskId = task[0]
-            data +=f"## Command: {self.getTaskCommand(taskId)} \n {self.getTaskError(taskId)} \n---"
+            data +=f"## Command: {self.getTaskCommand(taskId)} \n {self.getTaskError(taskId)} \n---\n"
         print(data)
         return data
 

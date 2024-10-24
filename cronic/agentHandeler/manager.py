@@ -45,7 +45,17 @@ def handelNewRequest(agentManager, endpointManager):
 
 
 def taskWatcher(agentManager, endpoint):
-    pass
+    running = True
+    while running:
+        time.sleep(4)
+        activeUsers = agentManager.getActiveUser()
+        for user in activeUsers:
+            userId = user[0]
+            for task in agentManager.getUserActiveTask(userId):
+                taskId = task[0]
+                if agentManager.getTaskUptime(taskId) >= 40:
+                    agentManager.setTaskTimeout(taskId)
+    
 def taskRotator(agentManager, endpointManager):
     running = True
     while running:
@@ -67,7 +77,8 @@ def main():
     agentManager = AgentManager(secret_name, rds_endpoint, region_name, db_name="aiAssesDB4")
     endpoint = EndpointHandeler(host=hostEndpoint)
     #deployTask(agentManager=agentManager, endpoint=endpoint, userId="347939e5-58d7-4f8c-bcdc-55995e1c2d62", targer="http://localhost:8000")
-    taskRotator(agentManager, endpoint)
+    taskWatcher(agentManager, endpoint)
+    #taskRotator(agentManager, endpoint)
 
     #res = agentManager.createUser(name="john",email="john@gmail.com",endpoint="google.com", detailedReport=True)
     
