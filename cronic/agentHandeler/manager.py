@@ -62,9 +62,16 @@ def processData(agentManager, endpointManager, userId):
     data = agentManager.getUserTaskOutputs(userId)
     res = endpointManager.extInformation(str(data))
     print(f"The results is {res}")
+    task = dict()
     for command in res.get('next_steps'):
         print("------------------------")
         print(command)
+        taskId = agentManager.createTask(userId=userId, agentId="Null-12",command=str(command))
+        task[taskId]={"command":[command]}
+        taskRun.delay(agentId="Null-12", tasks=task, packages=[], userId=userId)
+        task = dict()
+    agentManager.incUserCounter(userId)
+    agentManager.setUserTaskComplete(userId)
 
 def taskRotator(agentManager, endpointManager):
     running = True

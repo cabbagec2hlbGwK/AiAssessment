@@ -182,15 +182,11 @@ class AgentManager:
         diffrence = datetime.now() - startTime 
         return diffrence.total_seconds() / 60
     def getUserTaskOutputs(self, userId):
-        success = self.getUserSuccessTask(userId)
-        error = self.getUserErrorTask(userId)
+        success = self.getCompletedTask(userId)
         data = ""
         for task in success:
             taskId = task[0]
             data +=f"## Command: {self.getTaskCommand(taskId)} \n {self.getTaskOutput(taskId)} \n---\n"
-        for task in error:
-            taskId = task[0]
-            data +=f"## Command: {self.getTaskCommand(taskId)} \n {self.getTaskError(taskId)} \n---\n"
         return data
 
 
@@ -359,6 +355,10 @@ class AgentManager:
             print(e)
             return False
 
+    def setUserTaskComplete(self, userId):
+        query = "UPDATE task_list SET hasMessageBeenSent = TRUE WHERE userId = %s AND taskStatus IN ('success', 'error');"
+        results = self.execute_query(query, (userId,))
+        return results
 
 
     def close(self):
