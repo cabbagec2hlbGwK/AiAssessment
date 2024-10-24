@@ -181,7 +181,6 @@ class AgentManager:
         success = self.getUserSuccessTask(userId)
         error = self.getUserErrorTask(userId)
         print(success, error)
-        input("waiting")
 
 
     def getTask(self,taskId):
