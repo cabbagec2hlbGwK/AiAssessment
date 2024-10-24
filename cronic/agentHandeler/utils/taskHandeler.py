@@ -180,12 +180,13 @@ class AgentManager:
     def getUserTaskOutputs(self, userId):
         success = self.getUserSuccessTask(userId)
         error = self.getUserErrorTask(userId)
+        print(len(success),len(error),len(self.getUserTask(userId)))
         for task in success:
             taskId = task[0]
-            print(self.getTaskOutput(taskId))
+            #print(self.getTaskOutput(taskId))
         for task in error:
             taskId = task[0]
-            print(self.getTaskError(taskId))
+            #print(self.getTaskError(taskId))
 
 
 

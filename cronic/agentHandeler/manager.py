@@ -52,6 +52,8 @@ def taskRotator(agentManager, endpointManager):
         for user in activeUsers:
             userId = user[0]
             agentManager.getUserTaskOutputs(userId)
+            session = agentManager.isSessionCompleted(userId)
+            print(session)
 
 
 
