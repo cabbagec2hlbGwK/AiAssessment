@@ -34,9 +34,11 @@ def handelNewRequest(agentManager, endpointManager):
         input("waiting for res")
         if len(newUsers) <= 0:
             continue
-        for userId in newUsers:
-            print(f"New User registered {userId}")
-            deployTask(agentManager=agentManager, endpoint=endpointManager, userId=userId, targer=agentManager.getUserTarger(userId))
+        for user in newUsers:
+            userId = user[0]
+            target = agentManager.getUserTarger(userId)
+            print(f"New User registered {userId}   Endpoint/Website: {target}")
+            deployTask(agentManager=agentManager, endpoint=endpointManager, userId=userId, targer=target)
 
 
 
