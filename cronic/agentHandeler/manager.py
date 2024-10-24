@@ -59,7 +59,9 @@ def taskWatcher(agentManager):
                     agentManager.setTaskTimeout(taskId)
     
 def processData(agentManager, endpointManager, userId):
+    print(f"Session complete for user {userId}")
     if agentManager.getUserCounter(userId) >= 6:
+        print(f"Gen report for user {userId}")
         data = agentManager.getUserSuccessTaskOutputs(userId)
         information = agentManager.getUserInfo(userId)
         res = endpointManager.getReport(f"# Key information: \n {information} \n# Additionnal information \n {data}")
