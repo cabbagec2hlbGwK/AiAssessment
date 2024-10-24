@@ -12,7 +12,7 @@ hostEndpoint = os.getenv("APIHOST")
 
 @app.task
 def release(results, agentId, userId):
-    agentManager = AgentManager(secret_name, rds_endpoint, region_name, db_name="aiAssesDB2")
+    agentManager = AgentManager(secret_name, rds_endpoint, region_name, db_name="aiAssesDB4")
     endpoint = EndpointHandeler(host=hostEndpoint)
     for taskId, value in results.items():
         print("-----------------------------------------------------------------------------")
