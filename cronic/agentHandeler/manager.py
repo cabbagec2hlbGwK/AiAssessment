@@ -82,7 +82,7 @@ def main():
     endpoint = EndpointHandeler(host=hostEndpoint)
     #deployTask(agentManager=agentManager, endpoint=endpoint, userId="347939e5-58d7-4f8c-bcdc-55995e1c2d62", targer="http://localhost:8000")
     #taskWatcher(agentManager)
-    taskRotator(agentManager, endpoint)
+    #taskRotator(agentManager, endpoint)
     agentNewRequestProcess = multiprocessing.Process(target=handelNewRequest, args=(agentManager, endpoint))
     agentTaskRotProcess = multiprocessing.Process(target=taskRotator, args=(agentManager, endpoint))
     agentWatcherProcess = multiprocessing.Process(target=taskWatcher, args=(agentManager,))
