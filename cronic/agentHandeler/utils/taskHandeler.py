@@ -184,13 +184,7 @@ class AgentManager:
     def getUserTaskOutputs(self, userId):
         success = self.getUserSuccessTask(userId)
         error = self.getUserErrorTask(userId)
-        total = self.getUserTask(userId)
-        print(len(success),len(error),len(total))
         data = ""
-        for task in total:
-            taskId = task[0]
-            print(self.getTaskCommand(taskId))
-            print(self.getTaskUpTime(taskId))
         for task in success:
             taskId = task[0]
             data +=f"## Command: {self.getTaskCommand(taskId)} \n {self.getTaskOutput(taskId)} \n---\n"
@@ -201,6 +195,12 @@ class AgentManager:
         return data
 
 
+
+    def userTaskStatus(self, userId):
+        success = len(self.getUserSuccessTask(userId))
+        error = len(self.getUserErrorTask(userId))
+        total = len(self.getUserTask(userId))
+        print(f"Total Successfull Tasks: {success}, Total Error Task: {error}, Total Task: {total}")
 
     def getTask(self,taskId):
         query = "SELECT * FROM task_list WHERE taskId = %s;"

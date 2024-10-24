@@ -48,7 +48,7 @@ def taskWatcher(agentManager):
     running = True
     print("Task Watcher is running")
     while running:
-        time.sleep(4)
+        time.sleep(90)
         activeUsers = agentManager.getActiveUser()
         for user in activeUsers:
             userId = user[0]
@@ -62,10 +62,11 @@ def taskRotator(agentManager, endpointManager):
     running = True
     print("Task Rotator us running")
     while running:
-        time.sleep(4)
-        activeUsers = agentManager.getActiveUser()
+        time.sleep(10)
+        activeUsers= agentManager.getActiveUser()
         for user in activeUsers:
             userId = user[0]
+            agentManager.userTaskStatus(userId)
             #agentManager.getUserTaskOutputs(userId)
             session = agentManager.isSessionCompleted(userId)
             print(f"User : {userId} sessionStatus: {session}")
