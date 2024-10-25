@@ -52,14 +52,14 @@ def dashboard_view(request):
     return render(request, 'dashboard/dashboard.html', {'form': form})
 
 
-def report_view(request):
-    email = request.GET.get('email')
-    endpoint = request.GET.get('endpoint')
-    user_data = request.GET.get('userData')
-    
-    context = {
-        'email': email,
-        'endpoint': endpoint,
-        'user_data': user_data,
-    }
-    return render(request, 'result.html', context)
+def report_view(request, userId):
+    if request.method == 'GET':
+        secret_name = os.getenv("secret_name")
+        rds_endpoint = os.getenv("rds_endpoint")
+        region_name = os.getenv("AWS_DEFAULT_REGION")
+        agent_manager = AgentManager(use_local=False, secret_name=secret_name, rds_endpoint=rds_endpoint, region_name=region_name)
+        if userId:
+            userData = agent_manager.fetch_user(userId)
+            data = userData.get("resultData")
+            return render(request, 'result.html', data)
+        return render(request, 'result.html',{})
