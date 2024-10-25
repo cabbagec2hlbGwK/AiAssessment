@@ -88,7 +88,7 @@ class AgentManager:
                 select_user_query = """
                 SELECT name, email, endpoint, resultData
                 FROM user_reg
-                WHERE userId = %s AND Detailed = 0;
+                WHERE userId = %s;
                 """
                 cursor.execute(select_user_query, [user_id])
                 user_data = cursor.fetchone()  # Fetch one row from the result
@@ -114,7 +114,7 @@ class AgentManager:
                 
                 # Log if no user data was found
                 print(f"No user found for user_id: {user_id}")
-                return None  # Return None if no data is found
+                return {}  # Return None if no data is found
         except Exception as e:
             print(f"Error fetching user: {e}")  # Log the error
             return None
