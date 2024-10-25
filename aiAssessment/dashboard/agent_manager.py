@@ -7,7 +7,7 @@ from pymysql import OperationalError
 from botocore.exceptions import ClientError
 
 class AgentManager:
-    def __init__(self, secret_name=None, rds_endpoint=None, region_name=None, db_name="aiAssesDB3", use_local=False):
+    def __init__(self, secret_name=None, rds_endpoint=None, region_name=None, db_name="aiAssesDB4", use_local=False):
         self.use_local = use_local
         self.db_name = db_name
         
