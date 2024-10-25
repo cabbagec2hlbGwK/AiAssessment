@@ -8,7 +8,7 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body class="bg-gray-100 min-h-screen p-6 flex flex-col items-center">
-
+    
     <div class="bg-white p-8 shadow-lg rounded-lg w-full max-w-4xl">
         <h1 class="text-3xl font-bold text-gray-700 mb-6 text-center">Vulnerability Assessment Report</h1>
         
@@ -20,6 +20,7 @@
             <p class="mt-2 text-gray-800"><strong>Assessment Date:</strong> {{ project_info.assessment_date }}</p>
             <p class="mt-2 text-gray-800"><strong>Report Date:</strong> {{ project_info.report_date }}</p>
         </div>
+        
         <div class="bg-white p-6 shadow-md rounded-lg mb-8">
             <h2 class="text-2xl font-semibold text-gray-700">Executive Summary</h2>
             <p class="mt-4 text-gray-600">{{ executive_summary.description }}</p>
@@ -29,8 +30,7 @@
                 <canvas id="issuesChart" width="400" height="400"></canvas>
             </div>
         </div>
-
-        <!-- Findings & Analysis Section -->
+        
         <div class="bg-white p-6 shadow-md rounded-lg mb-8">
             <h2 class="text-2xl font-semibold text-gray-700">Findings & Analysis</h2>
             {% for finding in findings_and_analysis.detailed_findings %}
@@ -69,25 +69,7 @@
                 {% endfor %}
             </ul>
         </div>
-        <div class="bg-white p-6 shadow-md rounded-lg mb-8">
-            <h2 class="text-2xl font-semibold text-gray-700">Conclusion</h2>
-            <p class="mt-4 text-gray-600">{{ conclusion.summary }}</p>
-        </div>
-        <div class="bg-white p-6 shadow-md rounded-lg mb-8">
-            <h2 class="text-2xl font-semibold text-gray-700">Appendix</h2>
-            <h3 class="text-xl font-semibold text-gray-700 mt-4">Tools Used:</h3>
-            <ul class="list-disc ml-6 mt-2 text-gray-600">
-                {% for tool in appendix.tools_used %}
-                    <li>{{ tool }}</li>
-                {% endfor %}
-            </ul>
-            <h3 class="text-xl font-semibold text-gray-700 mt-4">References:</h3>
-            <ul class="list-disc ml-6 mt-2 text-gray-600">
-                {% for reference in appendix.references %}
-                    <li>{{ reference }}</li>
-                {% endfor %}
-            </ul>
-        </div>
+
     </div>
 
     <script>
