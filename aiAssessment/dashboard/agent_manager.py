@@ -6,6 +6,14 @@ from datetime import datetime
 from pymysql import OperationalError
 from botocore.exceptions import ClientError
 
+def remove_trailing_spaces(data):
+    if isinstance(data, dict):
+        return {key.strip(): remove_trailing_spaces(value) for key, value in data.items()}
+    elif isinstance(data, list):
+        return [remove_trailing_spaces(item) for item in data]
+    else:
+        return data
+
 class AgentManager:
     def __init__(self, secret_name=None, rds_endpoint=None, region_name=None, db_name="aiAssesDB4", use_local=False):
         self.use_local = use_local
@@ -102,6 +110,7 @@ class AgentManager:
 
                     # Decode and parse JSON from the BLOB
                     result_data = json.loads(result_data_blob)
+                    result_data = remove_trailing_spaces(result_data)
 
                     # Create a dictionary to return
                     user_data_dict = {
