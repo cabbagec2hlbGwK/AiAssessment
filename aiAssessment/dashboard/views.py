@@ -60,6 +60,7 @@ def report_view(request, userId):
         agent_manager = AgentManager(use_local=False, secret_name=secret_name, rds_endpoint=rds_endpoint, region_name=region_name)
         if userId:
             userData = agent_manager.fetch_user(userId)
-            data = userData.get("resultData", "")
+            data = userData.get("resultData")
+            print(f"Data is: {data} type: {type(data)}")
             return render(request, 'result.html', data)
         return render(request, 'result.html',{})

@@ -108,7 +108,7 @@ class AgentManager:
                         'name': name,
                         'email': email,
                         'endpoint': endpoint,
-                        'resultData': result_data  # Include the parsed resultData
+                        'resultData': json.loads(result_data)  # Include the parsed resultData
                     }
                     return user_data_dict  # Return the user data dictionary
                 
