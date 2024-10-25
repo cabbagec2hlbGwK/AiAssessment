@@ -61,6 +61,6 @@ def report_view(request, userId):
         if userId:
             userData = agent_manager.fetch_user(userId)
             data = userData.get("resultData")
-            print(f"Data is: {data} type: {type(data)}")
+            print(f"type: {type(data)}")
             return render(request, 'result.html', data)
         return render(request, 'result.html',{})

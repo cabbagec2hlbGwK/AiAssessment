@@ -102,7 +102,6 @@ class AgentManager:
 
                     # Decode and parse JSON from the BLOB
                     result_data = json.loads(result_data_blob)
-                    print(result_data)
 
                     # Create a dictionary to return
                     user_data_dict = {
