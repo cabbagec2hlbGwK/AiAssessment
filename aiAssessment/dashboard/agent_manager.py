@@ -109,8 +109,12 @@ class AgentManager:
                     result_data_blob = user_data[3]  # resultData is at index 3
 
                     # Decode and parse JSON from the BLOB
-                    result_data = json.loads(result_data_blob)
-                    result_data = remove_trailing_spaces(result_data)
+                    result_data = {}
+                    if result_data_blob:
+                        result_data = json.loads(result_data_blob)
+                        result_data = remove_trailing_spaces(result_data)
+                    else:
+                        result_data = {"state":"pending"}
 
                     # Create a dictionary to return
                     user_data_dict = {
