@@ -101,14 +101,15 @@ class AgentManager:
                     result_data_blob = user_data[3]  # resultData is at index 3
 
                     # Decode and parse JSON from the BLOB
-                    result_data = json.loads(result_data_blob.decode('utf-8')) if result_data_blob else None
+                    result_data = json.loads(result_data_blob)
+                    print(result_data)
 
                     # Create a dictionary to return
                     user_data_dict = {
                         'name': name,
                         'email': email,
                         'endpoint': endpoint,
-                        'resultData': json.loads(result_data)  # Include the parsed resultData
+                        'resultData': result_data  # Include the parsed resultData
                     }
                     return user_data_dict  # Return the user data dictionary
                 
