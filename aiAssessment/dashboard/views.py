@@ -62,5 +62,7 @@ def report_view(request, userId):
             userData = agent_manager.fetch_user(userId)
             data = userData.get("resultData")
             data['email']= userData.get('email',"Null")
-            return render(request, 'result.html', userData)
+            data['endpoint']= userData.get('endpoint',"Null")
+            data['name']= userData.get('name',"Null")
+            return render(request, 'result.html', data)
         return render(request, 'result.html',{})
