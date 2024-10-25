@@ -61,6 +61,6 @@ def report_view(request, userId):
         if userId:
             userData = agent_manager.fetch_user(userId)
             data = userData.get("resultData")
-            print(f"type: {data.project_info.client_name}")
+            print(f"type: {data.get('project_info')['client_name']}")
             return render(request, 'result.html', data)
         return render(request, 'result.html',{})
